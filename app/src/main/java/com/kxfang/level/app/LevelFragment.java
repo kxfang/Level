@@ -7,8 +7,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -24,16 +22,12 @@ import java.util.List;
 /**
  * Fragment encapsulating the main view of the Level.
  */
-public class LevelFragment extends Fragment implements SurfaceHolder.Callback {
+public class LevelFragment extends Fragment {
 
   private static final String TAG = "LevelFragment";
 
-  // Surface states
-  private volatile boolean mSurfaceCreated = false;
-  private volatile boolean mSurfaceDestroyed = false;
-
   private SensorManager mSensorManager;
-  private LevelSurfaceView mLevelSurfaceView;
+  private LevelView mLevelView;
 
   // List of filters for sensor data to pass through
   private volatile List<FloatFilter> mFilterChain;
@@ -42,20 +36,19 @@ public class LevelFragment extends Fragment implements SurfaceHolder.Callback {
   private SensorEventListener mSensorEventListener = new SensorEventListener() {
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-      if (mSurfaceCreated && !mSurfaceDestroyed) {
-        float [] filteredValues = Arrays.copyOf(sensorEvent.values, sensorEvent.values.length);
+      Log.d(TAG, "sensor changed");
+      float [] filteredValues = Arrays.copyOf(sensorEvent.values, sensorEvent.values.length);
 
-        // Copy the filter chain reference in case it changes
-        List<FloatFilter> filterChain = mFilterChain;
+      // Copy the filter chain reference in case it changes
+      List<FloatFilter> filterChain = mFilterChain;
 
-        for (int i = 0; i < sensorEvent.values.length; i++) {
-          for (FloatFilter filter : filterChain) {
-            filteredValues[i] = filter.next(filteredValues[i]);
-          }
+      for (int i = 0; i < sensorEvent.values.length; i++) {
+        for (FloatFilter filter : filterChain) {
+          filteredValues[i] = filter.next(filteredValues[i]);
         }
-
-        mLevelSurfaceView.render(filteredValues);
       }
+
+      mLevelView.render(filteredValues);
     }
 
     @Override
@@ -63,11 +56,6 @@ public class LevelFragment extends Fragment implements SurfaceHolder.Callback {
       // Do nothing
     }
   };
-
-  // Background thread that listens to sensor events
-  private HandlerThread mSensorThread;
-  private Handler mSensorEventHandler;
-
 
   // Public methods
   public void setFilterChain(List<FloatFilter> filterChain) {
@@ -85,10 +73,6 @@ public class LevelFragment extends Fragment implements SurfaceHolder.Callback {
     }
 
     mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
-
-    mSensorThread = new HandlerThread("sensorThread");
-    mSensorThread.start();
-    mSensorEventHandler = new Handler(mSensorThread.getLooper());
   }
 
   @Override
@@ -99,8 +83,7 @@ public class LevelFragment extends Fragment implements SurfaceHolder.Callback {
   @Override
   public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    mLevelSurfaceView = (LevelSurfaceView) view.findViewById(R.id.view_level_surface);
-    mLevelSurfaceView.getHolder().addCallback(this);
+    mLevelView = (LevelView) view.findViewById(R.id.view_level);
   }
 
   @Override
@@ -109,30 +92,12 @@ public class LevelFragment extends Fragment implements SurfaceHolder.Callback {
     mSensorManager.registerListener(
         mSensorEventListener,
         mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY),
-        SensorManager.SENSOR_DELAY_GAME,
-        mSensorEventHandler);
-    Log.d(TAG, "Registered listener");
+        SensorManager.SENSOR_DELAY_GAME);
   }
 
   @Override
   public void onPause() {
     super.onPause();
     mSensorManager.unregisterListener(mSensorEventListener);
-  }
-
-  // SurfaceHolder.Callback implementation
-  @Override
-  public void surfaceCreated(SurfaceHolder surfaceHolder) {
-    mSurfaceCreated = true;
-  }
-
-  @Override
-  public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i2, int i3) {
-    // Do nothing
-  }
-
-  @Override
-  public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-    mSurfaceDestroyed = true;
   }
 }
