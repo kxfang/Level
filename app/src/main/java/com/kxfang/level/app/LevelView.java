@@ -83,12 +83,12 @@ public class LevelView extends View {
     return getWidth() / 4.5f;
   }
 
-  private float getTopPositiveCircleY(float mTheta) {
-    return (getHeight() / 2) * (1 - (mTheta / 45));
+  private float getTopPositiveCircleY(float theta) {
+    return (getHeight() / 2) * (1 - (theta / 45));
   }
 
-  private float getBottomPositiveCircleY(float mTheta) {
-    return getHeight() - getTopPositiveCircleY(mTheta);
+  private float getBottomPositiveCircleY(float theta) {
+    return getHeight() - getTopPositiveCircleY(theta);
   }
 
   private float getCentreX() {
