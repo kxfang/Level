@@ -18,7 +18,8 @@ public class LevelView extends View {
   private float mRotation;
 
   // Paint objects to optimize onDraw
-  Paint mTextPaint;
+  private Paint mTextPaint;
+  private Paint mPositiveCirclePaint;
 
   /**
    * Constructor to be used to inflate the view
@@ -31,8 +32,13 @@ public class LevelView extends View {
     mTextPaint.setColor(Color.WHITE);
     mTextPaint.setAntiAlias(true);
     mTextPaint.setTextAlign(Paint.Align.CENTER);
-    mTextPaint.setTextSize(250.0f);
+    mTextPaint.setTextSize(230.0f);
     mTextPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.XOR));
+
+    mPositiveCirclePaint = new Paint();
+    mPositiveCirclePaint.setColor(Color.WHITE);
+    mPositiveCirclePaint.setAntiAlias(true);
+    mPositiveCirclePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.XOR));
   }
 
   public void render(float[] values) {
@@ -52,7 +58,17 @@ public class LevelView extends View {
     c.drawColor(Color.BLACK);
     c.saveLayer(null, null, Canvas.MATRIX_SAVE_FLAG);
     c.rotate(mRotation, getCentreX(), getCenterY());
-    String text = "" + (int) mTheta;
+    c.drawCircle(
+        getCentreX(),
+        getTopPositiveCircleY(mTheta),
+        getCircleRadius(),
+        mPositiveCirclePaint);
+    c.drawCircle(
+        getCentreX(),
+        getBottomPositiveCircleY(mTheta),
+        getCircleRadius(),
+        mPositiveCirclePaint);
+    String text = (int) mTheta + "°";
     Rect textBounds = new Rect();
     mTextPaint.getTextBounds(text, 0, text.length(), textBounds);
     c.drawText(
@@ -63,11 +79,23 @@ public class LevelView extends View {
     c.restore();
   }
 
+  private float getCircleRadius() {
+    return getWidth() / 4.5f;
+  }
+
+  private float getTopPositiveCircleY(float mTheta) {
+    return (getHeight() / 2) * (1 - (mTheta / 45));
+  }
+
+  private float getBottomPositiveCircleY(float mTheta) {
+    return getHeight() - getTopPositiveCircleY(mTheta);
+  }
+
   private float getCentreX() {
-    return getRight() / 2;
+    return getWidth() / 2;
   }
 
   private float getCenterY() {
-    return getBottom() / 2;
+    return getHeight() / 2;
   }
 }
