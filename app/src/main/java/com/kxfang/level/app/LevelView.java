@@ -58,14 +58,17 @@ public class LevelView extends View {
     c.drawColor(Color.BLACK);
     c.saveLayer(null, null, Canvas.MATRIX_SAVE_FLAG);
     c.rotate(mRotation, getCentreX(), getCenterY());
+
+    boolean flat = isFlat(mTheta, mRotation);
+
     c.drawCircle(
         getCentreX(),
-        getTopPositiveCircleY(mTheta),
-        getCircleRadius(),
+        flat ? getCenterY() : getTopPositiveCircleY(mTheta),
+        getCircleRadius() + 5.0f,
         mPositiveCirclePaint);
     c.drawCircle(
         getCentreX(),
-        getBottomPositiveCircleY(mTheta),
+        flat ? getCenterY() : getBottomPositiveCircleY(mTheta),
         getCircleRadius(),
         mPositiveCirclePaint);
     String text = (int) mTheta + "°";
@@ -77,6 +80,10 @@ public class LevelView extends View {
         getCenterY() + (textBounds.bottom - textBounds.top)/2,
         mTextPaint);
     c.restore();
+  }
+
+  private boolean isFlat(float theta, float rotation) {
+    return (int) theta == 0;
   }
 
   private float getCircleRadius() {
