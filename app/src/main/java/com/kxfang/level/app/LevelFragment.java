@@ -7,9 +7,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -28,7 +26,7 @@ public class LevelFragment extends Fragment {
   private static final String TAG = "LevelFragment";
 
   private SensorManager mSensorManager;
-  private LevelView mLevelView;
+  private BullsEyeLevelView mBullsEyeLevelView;
 
   // List of filters for sensor data to pass through
   private volatile List<? extends FloatFilter> mFilterChain;
@@ -48,7 +46,7 @@ public class LevelFragment extends Fragment {
         }
       }
 
-      mLevelView.render(filteredValues);
+      mBullsEyeLevelView.render(filteredValues);
     }
 
     @Override
@@ -86,7 +84,7 @@ public class LevelFragment extends Fragment {
   @Override
   public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    mLevelView = (LevelView) view.findViewById(R.id.view_level);
+    mBullsEyeLevelView = (BullsEyeLevelView) view.findViewById(R.id.view_level);
   }
 
   @Override
