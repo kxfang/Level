@@ -9,23 +9,32 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.hardware.SensorManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
 
 public class LevelView extends View {
 
-  private float mTheta;
-  private float mRotation;
+  private float mTheta = 1.0f;
+  private float mRotation = 1.0f;
 
   // Paint objects to optimize onDraw
   private Paint mTextPaint;
   private Paint mPositiveCirclePaint;
+
+  private ArgbColorInterpolator mBackgroundInterpolator;
+
+  private final long BACKGROUND_FADE_DURATION = 200;
+  private boolean mIsFlat;
+  private final int CONFIRMATION_COLOR = 0xff99cc00;
 
   /**
    * Constructor to be used to inflate the view
    */
   public LevelView(Context context, AttributeSet attrs) {
     super(context, attrs);
+
+    mIsFlat = false;
 
     // TODO: refactor into xml
     mTextPaint = new Paint();
@@ -39,6 +48,9 @@ public class LevelView extends View {
     mPositiveCirclePaint.setColor(Color.WHITE);
     mPositiveCirclePaint.setAntiAlias(true);
     mPositiveCirclePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.XOR));
+
+    mBackgroundInterpolator =
+        new ArgbColorInterpolator(Color.BLACK, CONFIRMATION_COLOR, BACKGROUND_FADE_DURATION);
   }
 
   public void render(float[] values) {
@@ -55,11 +67,22 @@ public class LevelView extends View {
   @Override
   protected void onDraw(Canvas c) {
     super.onDraw(c);
-    c.drawColor(Color.BLACK);
+    boolean flat = isFlat(mTheta, mRotation);
+
+    if (flat != mIsFlat) {
+      if (flat && !mIsFlat) {
+        mBackgroundInterpolator.start();
+        Log.d("FLAT", "starting");
+      } else if (!flat && mIsFlat) {
+        mBackgroundInterpolator.reverse();
+        Log.d("FLAT", "reversing");
+      }
+      mIsFlat = flat;
+    }
+
+    c.drawColor(mBackgroundInterpolator.getColor());
     c.saveLayer(null, null, Canvas.MATRIX_SAVE_FLAG);
     c.rotate(mRotation, getCentreX(), getCenterY());
-
-    boolean flat = isFlat(mTheta, mRotation);
 
     c.drawCircle(
         getCentreX(),

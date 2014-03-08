@@ -36,7 +36,6 @@ public class LevelFragment extends Fragment {
   private SensorEventListener mSensorEventListener = new SensorEventListener() {
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-      Log.d(TAG, "sensor changed");
       float [] filteredValues = Arrays.copyOf(sensorEvent.values, sensorEvent.values.length);
 
       // Copy the filter chain reference in case it changes
