@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.kxfang.level.app.filter.FloatFilter;
+import com.kxfang.level.app.filter.MovingAverageFilter;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,7 +31,7 @@ public class LevelFragment extends Fragment {
   private LevelView mLevelView;
 
   // List of filters for sensor data to pass through
-  private volatile List<FloatFilter> mFilterChain;
+  private volatile List<? extends FloatFilter> mFilterChain;
 
   // SensorEventListener
   private SensorEventListener mSensorEventListener = new SensorEventListener() {
@@ -39,7 +40,7 @@ public class LevelFragment extends Fragment {
       float [] filteredValues = Arrays.copyOf(sensorEvent.values, sensorEvent.values.length);
 
       // Copy the filter chain reference in case it changes
-      List<FloatFilter> filterChain = mFilterChain;
+      List<? extends FloatFilter> filterChain = mFilterChain;
 
       for (int i = 0; i < sensorEvent.values.length; i++) {
         for (FloatFilter filter : filterChain) {
@@ -57,7 +58,7 @@ public class LevelFragment extends Fragment {
   };
 
   // Public methods
-  public void setFilterChain(List<FloatFilter> filterChain) {
+  public void setFilterChain(List<? extends FloatFilter> filterChain) {
     if (filterChain == null) {
       mFilterChain = Collections.emptyList();
     }
@@ -70,6 +71,9 @@ public class LevelFragment extends Fragment {
     if (mFilterChain == null) {
       mFilterChain = Collections.emptyList();
     }
+
+    // TODO: Pass in filter chain elsewhere
+    setFilterChain(Collections.singletonList(new MovingAverageFilter(10)));
 
     mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
   }
