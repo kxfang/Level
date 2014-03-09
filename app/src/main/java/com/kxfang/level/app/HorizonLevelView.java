@@ -1,5 +1,6 @@
 package com.kxfang.level.app;
 
+import android.animation.ArgbEvaluator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -11,13 +12,16 @@ import android.util.AttributeSet;
  */
 public class HorizonLevelView extends LevelView {
 
-  private final float HORIZON_TILT_THRESHOLD = 40.0f;
+  private final float HORIZON_TILT_THRESHOLD = 45.5f;
   private final float HORIZON_TILT = 90.0f;
   private float mRotation;
   private float mTilt;
+  private boolean mIsLevel;
 
   private int mHorizonColor = Color.BLACK;
-  private int mBackgroundColor = Color.WHITE;
+  private int mBackgroundColor = Color.argb(255, 231, 229, 229);
+  private TimeInterpolator mConfirmationTransitionInterpolator;
+  private ArgbEvaluator mColorEvaluator;
 
   private Paint mHorizonPaint;
   private Paint mTextPaint;
@@ -28,12 +32,18 @@ public class HorizonLevelView extends LevelView {
     mHorizonPaint = new Paint();
     mHorizonPaint.setStyle(Paint.Style.FILL);
     mHorizonPaint.setColor(mHorizonColor);
+    mHorizonPaint.setAntiAlias(true);
+
+    mConfirmationTransitionInterpolator = new TimeInterpolator(getBackgroundFadeDuration());
+    mColorEvaluator = new ArgbEvaluator();
 
     mTextPaint = new Paint();
     mTextPaint.setAntiAlias(true);
-    mTextPaint.setColor(Color.BLUE);
+    mTextPaint.setColor(Color.WHITE);
     mTextPaint.setTextSize(230.0f);
     mTextPaint.setTextAlign(Paint.Align.CENTER);
+
+    mIsLevel = false;
   }
 
   @Override
@@ -47,15 +57,51 @@ public class HorizonLevelView extends LevelView {
     super.onDraw(canvas);
     canvas.drawColor(mBackgroundColor);
 
+    float displayRotation = getDisplayRotation(mRotation);
+    boolean isLevel = isLevel(displayRotation);
+    if (isLevel != mIsLevel) {
+      if (isLevel) {
+        mConfirmationTransitionInterpolator.start();
+      } else {
+        mConfirmationTransitionInterpolator.reverse();
+      }
+      mIsLevel = isLevel;
+    }
+
+    float progress = mConfirmationTransitionInterpolator.getProgress();
+    canvas.drawColor((Integer) mColorEvaluator.evaluate(
+        progress,
+        mBackgroundColor,
+        CONFIRMATION_COLOR_ACCENT
+    ));
+    mHorizonPaint.setColor(
+        (Integer) mColorEvaluator.evaluate(
+            progress,
+            mHorizonColor,
+            CONFIRMATION_COLOR));
+
     canvas.save();
     canvas.rotate(mRotation, getCentreX(), getCenterY());
     canvas.save();
     canvas.translate(-10 * getWidth(), 0);
-    canvas.drawRect(Float.MIN_VALUE, getHorizonHeight(mTilt), Float.MAX_VALUE, Float.MAX_VALUE, mHorizonPaint);
+    canvas.drawRect(
+        Float.MIN_VALUE,
+        getHorizonHeight(mTilt),
+        Float.MAX_VALUE,
+        Float.MAX_VALUE,
+        mHorizonPaint);
     canvas.restore();
-    String text = (int) (-1 * ((mRotation + 45) % 90 - 45)) + "°";
+    String text = Math.round(displayRotation) + "°";
     drawCenterText(canvas, text, mTextPaint);
     canvas.restore();
+  }
+
+  private float getDisplayRotation(float mRotation) {
+    return -1 * ((mRotation + 45) % 90 - 45);
+  }
+
+  private boolean isLevel(float rotation) {
+    return Math.abs(rotation) < 0.5f;
   }
 
   private float getHorizonHeight(float tilt) {

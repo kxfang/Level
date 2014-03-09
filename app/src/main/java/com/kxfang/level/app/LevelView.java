@@ -2,9 +2,9 @@ package com.kxfang.level.app;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.hardware.SensorManager;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -13,6 +13,7 @@ import android.view.View;
  */
 public abstract class LevelView extends View {
   public static final int CONFIRMATION_COLOR = 0xff99cc00;
+  public static final int CONFIRMATION_COLOR_ACCENT = Color.argb(255, 201, 233, 123);
 
   private final long BACKGROUND_FADE_DURATION;
 

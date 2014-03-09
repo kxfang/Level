@@ -1,28 +1,36 @@
 package com.kxfang.level.app;
 
+import android.animation.ArgbEvaluator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.hardware.SensorManager;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.SurfaceView;
-import android.view.View;
 
 public class BullsEyeLevelView extends LevelView {
+
+  public enum Config {
+    DOWN,
+    UP
+  }
+
+  private Config mConfig;
 
   private float mTheta = 1.0f;
   private float mRotation = 1.0f;
 
   // Paint objects to optimize onDraw
   private Paint mTextPaint;
-  private Paint mPositiveCirclePaint;
+  private Paint mCirclePaint;
 
-  private ArgbColorInterpolator mBackgroundInterpolator;
+  private int mBackgroundColor = Color.BLACK;
+  private int mCircleColor = Color.argb(255, 120, 120, 120);
+
+  private TimeInterpolator mBackgroundInterpolator;
+  private ArgbEvaluator mArgbEvaluator;
 
   private boolean mIsFlat;
 
@@ -32,6 +40,7 @@ public class BullsEyeLevelView extends LevelView {
   public BullsEyeLevelView(Context context, AttributeSet attrs) {
     super(context, attrs);
 
+    mConfig = Config.DOWN;
     mIsFlat = false;
 
     // TODO: refactor into xml
@@ -42,13 +51,28 @@ public class BullsEyeLevelView extends LevelView {
     mTextPaint.setTextSize(230.0f);
     mTextPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.XOR));
 
-    mPositiveCirclePaint = new Paint();
-    mPositiveCirclePaint.setColor(Color.WHITE);
-    mPositiveCirclePaint.setAntiAlias(true);
-    mPositiveCirclePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.XOR));
+    mCirclePaint = new Paint();
+    mCirclePaint.setColor(mCircleColor);
+    mCirclePaint.setAntiAlias(true);
+    mCirclePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.XOR));
 
-    mBackgroundInterpolator =
-        new ArgbColorInterpolator(Color.BLACK, CONFIRMATION_COLOR, getBackgroundFadeDuration());
+    mBackgroundInterpolator = new TimeInterpolator(getBackgroundFadeDuration());
+    mArgbEvaluator = new ArgbEvaluator();
+  }
+
+  public void setConfig(Config config) {
+    if (config == null || mConfig == config) {
+      return;
+    }
+    mConfig = config;
+
+    int temp = mBackgroundColor;
+    mBackgroundColor = mCircleColor;
+    mCircleColor = temp;
+
+    mCirclePaint.setColor(mCircleColor);
+
+    invalidate();
   }
 
   @Override
@@ -73,7 +97,12 @@ public class BullsEyeLevelView extends LevelView {
       mIsFlat = flat;
     }
 
-    c.drawColor(mBackgroundInterpolator.getColor());
+    c.drawColor(
+        (Integer) mArgbEvaluator.evaluate(
+            mBackgroundInterpolator.getProgress(),
+            mBackgroundColor,
+            CONFIRMATION_COLOR));
+
     c.saveLayer(null, null, Canvas.MATRIX_SAVE_FLAG);
     c.rotate(mRotation, getCentreX(), getCenterY());
 
@@ -81,27 +110,29 @@ public class BullsEyeLevelView extends LevelView {
         getCentreX(),
         flat ? getCenterY() : getTopPositiveCircleY(mTheta),
         getCircleRadius() + 5.0f,
-        mPositiveCirclePaint);
+        mCirclePaint);
     c.drawCircle(
         getCentreX(),
         flat ? getCenterY() : getBottomPositiveCircleY(mTheta),
         getCircleRadius(),
-        mPositiveCirclePaint);
-    String text = (int) mTheta + "°";
+        mCirclePaint);
+    String text = Math.round(mTheta) + "°";
     drawCenterText(c, text, mTextPaint);
     c.restore();
   }
 
   private boolean isFlat(float theta, float rotation) {
-    return (int) theta == 0;
+    return Math.round(theta) == 0 || Math.round(theta) == 180;
   }
 
   private float getCircleRadius() {
-    return getWidth() / 4.5f;
+    return getWidth() / 4.0f;
   }
 
   private float getTopPositiveCircleY(float theta) {
-    return (getHeight() / 2) * (1 - (theta / 35));
+    float circleRadius = getCircleRadius();
+    return (getHeight() / 2 + circleRadius)
+        * (1 - ((mConfig == Config.DOWN ? theta : 180 - theta) / 45)) - circleRadius;
   }
 
   private float getBottomPositiveCircleY(float theta) {

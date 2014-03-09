@@ -29,8 +29,8 @@ public class LevelFragment extends Fragment {
   private static final String TAG = "LevelFragment";
 
   private SensorManager mSensorManager;
-  private LevelView mBullsEyeLevelView;
-  private LevelView mHorizonLevelView;
+  private BullsEyeLevelView mBullsEyeLevelView;
+  private HorizonLevelView mHorizonLevelView;
   private LevelView mActiveLevelView;
 
   // List of filters for sensor data to pass through
@@ -53,11 +53,15 @@ public class LevelFragment extends Fragment {
 
       mActiveLevelView.render(filteredValues);
 
-      if (OrientationUtils.getDeviceTilt(filteredValues[2]) > 45.5f
-          && mActiveLevelView != mHorizonLevelView) {
+      float deviceTilt = OrientationUtils.getDeviceTilt(filteredValues[2]);
+      if (deviceTilt > 45.5f
+          && deviceTilt < 134.5f) {
         setActiveLevelView(mHorizonLevelView);
-      } else if (OrientationUtils.getDeviceTilt(filteredValues[2]) <= 44.5f
-          && mActiveLevelView != mBullsEyeLevelView) {
+      } else if (deviceTilt < 44.5f) {
+        mBullsEyeLevelView.setConfig(BullsEyeLevelView.Config.DOWN);
+        setActiveLevelView(mBullsEyeLevelView);
+      } else if (deviceTilt > 135.5f) {
+        mBullsEyeLevelView.setConfig(BullsEyeLevelView.Config.UP);
         setActiveLevelView(mBullsEyeLevelView);
       }
     }
@@ -90,12 +94,6 @@ public class LevelFragment extends Fragment {
           .animate()
           .alpha(0.0f)
           .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
-          .setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-//              mActiveLevelView.setVisibility(View.GONE);
-            }
-          })
           .start();
 
       mActiveLevelView = levelView;
@@ -131,8 +129,8 @@ public class LevelFragment extends Fragment {
   @Override
   public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    mBullsEyeLevelView = (LevelView) view.findViewById(R.id.view_bulls_eye_level);
-    mHorizonLevelView = (LevelView) view.findViewById(R.id.view_horizon_level);
+    mBullsEyeLevelView = (BullsEyeLevelView) view.findViewById(R.id.view_bulls_eye_level);
+    mHorizonLevelView = (HorizonLevelView) view.findViewById(R.id.view_horizon_level);
     setActiveLevelView(mBullsEyeLevelView);
   }
 

@@ -1,17 +1,13 @@
 package com.kxfang.level.app;
 
-import android.animation.ArgbEvaluator;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
 /**
- * Class for interpolating ARGB color fading animations.
+ * Class for interpolating timed transitions.
  */
-public class ArgbColorInterpolator {
+public class TimeInterpolator {
   private Interpolator mInterpolator;
-
-  private final int mStartColor;
-  private final int mTransitionColor;
 
   private long mStartTime = 0;
   private long mDurationMillis;
@@ -20,23 +16,13 @@ public class ArgbColorInterpolator {
   private long mNowMillis;
 
   private boolean mReversed;
-
-  private ArgbEvaluator mArgbEvaluator;
-
   /**
-   * Sets up a interpolator that transitions between mainColor and transitionColor
+   * Sets up a interpolator that interpolates progress between transitions.
    */
-  public ArgbColorInterpolator(
-      int mainColor,
-      int transitionColor,
-      long durationMillis) {
+  public TimeInterpolator(long durationMillis) {
     mInterpolator = new LinearInterpolator();
-    mStartColor = mainColor;
-    mTransitionColor = transitionColor;
     mDurationMillis = durationMillis;
     mReversed = false;
-
-    mArgbEvaluator = new ArgbEvaluator();
   }
 
   public void start() {
@@ -58,11 +44,6 @@ public class ArgbColorInterpolator {
     }
   }
 
-  public int getColor() {
-    setNow();
-    return (Integer) mArgbEvaluator.evaluate(getProgress(), mStartColor, mTransitionColor);
-  }
-
   private void setNow() {
     mNowMillis = System.currentTimeMillis();
   }
@@ -78,7 +59,8 @@ public class ArgbColorInterpolator {
     return mNowMillis - mStartTime;
   }
 
-  private float getProgress() {
+  public float getProgress() {
+    setNow();
     float progress =  getProgressMillis() / (float) mDurationMillis;
     progress = Math.min(progress, 1.0f);
     return mReversed ? 1 - progress : progress;
