@@ -23,4 +23,8 @@ public final class OrientationUtils {
   public static float getDeviceTilt(float z) {
     return (float) Math.toDegrees(Math.acos(z / SensorManager.GRAVITY_EARTH));
   }
+
+  public static boolean isLandscape(float rotation) {
+    return ((rotation > 45 && rotation < 135) || (rotation > 225 && rotation < 315));
+  }
 }

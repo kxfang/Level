@@ -1,6 +1,7 @@
 package com.kxfang.level.app;
 
 import android.animation.ArgbEvaluator;
+import android.animation.FloatEvaluator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -16,9 +17,15 @@ public class BullsEyeLevelView extends LevelView {
     UP
   }
 
+  private final int ARC_INDICATOR_TRANSFORM_START_TILT = 17;
+  private final int ARC_INDICATOR_TRANSFORM_END_TILT = 30;
+  private final int LINE_INDICATOR_TRANSFORM_START_TILT = 32;
+  private final int LINE_INDICATOR_TRANSFORM_END_TILT = 44;
+
+
   private Config mConfig;
 
-  private float mTheta = 1.0f;
+  private float mTilt = 1.0f;
   private float mRotation = 1.0f;
 
   private RectF mArcDimensions;
@@ -33,6 +40,7 @@ public class BullsEyeLevelView extends LevelView {
 
   private TimeInterpolator mBackgroundInterpolator;
   private ArgbEvaluator mArgbEvaluator;
+  private FloatEvaluator mFloatEvaluator;
 
   private boolean mIsFlat;
 
@@ -57,6 +65,7 @@ public class BullsEyeLevelView extends LevelView {
 
     mBackgroundInterpolator = new TimeInterpolator(getBackgroundFadeDuration());
     mArgbEvaluator = new ArgbEvaluator();
+    mFloatEvaluator = new FloatEvaluator();
   }
 
   public void setConfig(Config config) {
@@ -86,14 +95,14 @@ public class BullsEyeLevelView extends LevelView {
 
   @Override
   protected void onDataChange(float[] values) {
-    mTheta = OrientationUtils.getDeviceTilt(values[2]);
+    mTilt = OrientationUtils.getDeviceTilt(values[2]);
     mRotation = OrientationUtils.getRotationDegrees(values[0], values[1]);
   }
 
   @Override
   protected void onDraw(Canvas c) {
     super.onDraw(c);
-    boolean flat = isFlat(mTheta, mRotation);
+    boolean flat = isFlat(mTilt, mRotation);
 
     if (flat != mIsFlat) {
       if (flat && !mIsFlat) {
@@ -117,14 +126,57 @@ public class BullsEyeLevelView extends LevelView {
 
     c.drawCircle(
         getCenterX(),
-        flat ? getCenterY() : getCircleY(mTheta),
+        flat ? getCenterY() : getCircleY(mTilt),
         getCircleRadius(),
         mCirclePaint);
-    c.drawArc(mArcDimensions, 135, 90, false, mArcPaint);
-    c.drawArc(mArcDimensions, 315, 90, false, mArcPaint);
-    String text = Math.round(mTheta) + "°";
+    String text = Math.round(mTilt) + "°";
     drawCenterText(c, text, mTextPaint);
     c.restore();
+    drawArcIndicators(c);
+
+    drawHorizonIndicators(
+        c,
+        getIndicatorValue(
+            mTilt,
+            LINE_INDICATOR_TRANSFORM_START_TILT,
+            LINE_INDICATOR_TRANSFORM_END_TILT,
+            0,
+            getHorizonIndicatorLength()),
+        OrientationUtils.isLandscape(mRotation));
+  }
+
+  private void drawArcIndicators(Canvas c) {
+    float tiltStart = ARC_INDICATOR_TRANSFORM_START_TILT;
+    float tiltEnd = ARC_INDICATOR_TRANSFORM_END_TILT;
+    c.drawArc(
+        mArcDimensions,
+        getIndicatorValue(mTilt, tiltStart, tiltEnd, 135, 180),
+        getIndicatorValue(mTilt, tiltStart, tiltEnd, 90, 0),
+        false,
+        mArcPaint);
+
+    c.drawArc(
+        mArcDimensions,
+        getIndicatorValue(mTilt, tiltStart, tiltEnd, 315, 360),
+        getIndicatorValue(mTilt, tiltStart, tiltEnd, 90, 0),
+        false,
+        mArcPaint);
+
+    drawHorizonIndicators(c, getIndicatorValue(mTilt, tiltStart, tiltEnd, 35, 0), false);
+  }
+
+  private float getIndicatorValue(
+      float tilt,
+      float tiltStart,
+      float tiltEnd,
+      float start,
+      float end) {
+    float fraction =
+        Math.max(
+            0,
+            Math.min(1, (tilt - tiltStart) / (tiltEnd - tiltStart)));
+
+    return mFloatEvaluator.evaluate(fraction, start, end);
   }
 
   private boolean isFlat(float theta, float rotation) {

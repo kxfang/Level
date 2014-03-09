@@ -20,6 +20,7 @@ public abstract class LevelView extends View {
   private Paint mIndicatorPaint;
 
   private Rect mTextBounds;
+  private float mHorizonIndicatorLength;
 
   public LevelView(Context context, AttributeSet attrs) {
     super(context, attrs);
@@ -53,6 +54,12 @@ public abstract class LevelView extends View {
     return BACKGROUND_FADE_DURATION;
   }
 
+  @Override
+  protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+    super.onSizeChanged(w, h, oldw, oldh);
+    mHorizonIndicatorLength = w / 8;
+  }
+
   protected float getCenterX() {
     return getWidth() / 2;
   }
@@ -76,5 +83,42 @@ public abstract class LevelView extends View {
 
   protected Paint getIndicatorPaint() {
     return mIndicatorPaint;
+  }
+
+  protected float getHorizonIndicatorLength() {
+    return mHorizonIndicatorLength;
+  }
+
+  protected void drawHorizonIndicators(Canvas c, float lineLength, boolean isLandscape) {
+    float centerX = getCenterX();
+    float centerY = getCenterY();
+    float bufferSpace = getTextBufferRadius();
+    if (isLandscape) {
+      c.drawLine(
+          centerX,
+          centerY + bufferSpace + lineLength,
+          centerX,
+          centerY + bufferSpace,
+          getIndicatorPaint());
+      c.drawLine(
+          centerX,
+          centerY - bufferSpace - lineLength,
+          centerX,
+          centerY - bufferSpace,
+          getIndicatorPaint());
+    } else {
+      c.drawLine(
+          centerX + bufferSpace + lineLength,
+          centerY,
+          centerX + bufferSpace,
+          centerY,
+          getIndicatorPaint());
+      c.drawLine(
+          centerX - bufferSpace - lineLength,
+          centerY,
+          centerX - bufferSpace,
+          centerY,
+          getIndicatorPaint());
+    }
   }
 }

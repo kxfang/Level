@@ -88,45 +88,10 @@ public class HorizonLevelView extends LevelView {
     drawCenterText(canvas, text, getIndicatorPaint());
     canvas.restore();
 
-    drawHorizonIndicators(canvas);
-  }
-
-  private void drawHorizonIndicators(Canvas c) {
-    float centerX = getCenterX();
-    float centerY = getCenterY();
-    float lineLength = getWidth() / 8;
-    float bufferSpace = getTextBufferRadius();
-    if (isLandScape(mRotation)) {
-      c.drawLine(
-          centerX,
-          centerY + bufferSpace + lineLength,
-          centerX,
-          centerY + bufferSpace,
-          getIndicatorPaint());
-      c.drawLine(
-          centerX,
-          centerY - bufferSpace - lineLength,
-          centerX,
-          centerY - bufferSpace,
-          getIndicatorPaint());
-    } else {
-      c.drawLine(
-          centerX + bufferSpace + lineLength,
-          centerY,
-          centerX + bufferSpace,
-          centerY,
-          getIndicatorPaint());
-      c.drawLine(
-          centerX - bufferSpace - lineLength,
-          centerY,
-          centerX - bufferSpace,
-          centerY,
-          getIndicatorPaint());
-    }
-  }
-
-  private boolean isLandScape(float rotation) {
-    return ((rotation > 45 && rotation < 135) || (rotation > 225 && rotation < 315));
+    drawHorizonIndicators(
+        canvas,
+        getHorizonIndicatorLength(),
+        OrientationUtils.isLandscape(mRotation));
   }
 
   private float getDisplayRotation(float mRotation) {
