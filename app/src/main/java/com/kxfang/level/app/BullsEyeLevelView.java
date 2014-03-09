@@ -44,12 +44,7 @@ public class BullsEyeLevelView extends LevelView {
     mIsFlat = false;
 
     // TODO: refactor into xml
-    mTextPaint = new Paint();
-    mTextPaint.setColor(Color.WHITE);
-    mTextPaint.setAntiAlias(true);
-    mTextPaint.setTextAlign(Paint.Align.CENTER);
-    mTextPaint.setTextSize(230.0f);
-    mTextPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.XOR));
+    mTextPaint = getIndicatorPaint();
 
     mCirclePaint = new Paint();
     mCirclePaint.setColor(mCircleColor);

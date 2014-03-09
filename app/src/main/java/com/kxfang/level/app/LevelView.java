@@ -17,6 +17,8 @@ public abstract class LevelView extends View {
 
   private final long BACKGROUND_FADE_DURATION;
 
+  private Paint mIndicatorPaint;
+
   private Rect mTextBounds;
 
   public LevelView(Context context, AttributeSet attrs) {
@@ -24,6 +26,13 @@ public abstract class LevelView extends View {
     BACKGROUND_FADE_DURATION =
         context.getResources().getInteger(android.R.integer.config_shortAnimTime);
     mTextBounds = new Rect();
+
+    mIndicatorPaint = new Paint();
+    mIndicatorPaint.setAntiAlias(true);
+    mIndicatorPaint.setColor(Color.WHITE);
+    mIndicatorPaint.setTextSize(200.0f);
+    mIndicatorPaint.setTextAlign(Paint.Align.CENTER);
+    mIndicatorPaint.setStrokeWidth(5.0f);
   }
 
   /**
@@ -59,5 +68,13 @@ public abstract class LevelView extends View {
         getCentreX(),
         getCenterY() + (mTextBounds.bottom - mTextBounds.top)/2,
         paint);
+  }
+
+  protected float getTextBufferRadius() {
+    return getWidth() / 3.5f;
+  }
+
+  protected Paint getIndicatorPaint() {
+    return mIndicatorPaint;
   }
 }

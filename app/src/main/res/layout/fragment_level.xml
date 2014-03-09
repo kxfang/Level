@@ -13,7 +13,6 @@
         android:id="@+id/view_horizon_level"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:alpha="0.0" />
+        android:visibility="gone" />
 
 </FrameLayout>

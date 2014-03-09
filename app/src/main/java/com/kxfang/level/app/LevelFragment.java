@@ -76,26 +76,8 @@ public class LevelFragment extends Fragment {
     if (mActiveLevelView == null) {
       mActiveLevelView = levelView;
     } else if (mActiveLevelView != levelView) {
-      if (mActiveLevelView.getAnimation() != null || levelView.getAnimation() != null) {
-        mActiveLevelView.clearAnimation();
-        levelView.clearAnimation();
-      } else {
-        levelView.setAlpha(0f);
-        levelView.setVisibility(View.VISIBLE);
-      }
-
-      levelView
-          .animate()
-          .alpha(1.0f)
-          .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
-          .start();
-
-      mActiveLevelView
-          .animate()
-          .alpha(0.0f)
-          .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
-          .start();
-
+      levelView.setVisibility(View.VISIBLE);
+      mActiveLevelView.setVisibility(View.GONE);
       mActiveLevelView = levelView;
     }
   }

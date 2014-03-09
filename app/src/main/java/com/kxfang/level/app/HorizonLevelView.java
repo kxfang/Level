@@ -24,7 +24,6 @@ public class HorizonLevelView extends LevelView {
   private ArgbEvaluator mColorEvaluator;
 
   private Paint mHorizonPaint;
-  private Paint mTextPaint;
 
   public HorizonLevelView(Context context, AttributeSet attrs) {
     super(context, attrs);
@@ -36,12 +35,6 @@ public class HorizonLevelView extends LevelView {
 
     mConfirmationTransitionInterpolator = new TimeInterpolator(getBackgroundFadeDuration());
     mColorEvaluator = new ArgbEvaluator();
-
-    mTextPaint = new Paint();
-    mTextPaint.setAntiAlias(true);
-    mTextPaint.setColor(Color.WHITE);
-    mTextPaint.setTextSize(230.0f);
-    mTextPaint.setTextAlign(Paint.Align.CENTER);
 
     mIsLevel = false;
   }
@@ -92,8 +85,48 @@ public class HorizonLevelView extends LevelView {
         mHorizonPaint);
     canvas.restore();
     String text = Math.round(displayRotation) + "°";
-    drawCenterText(canvas, text, mTextPaint);
+    drawCenterText(canvas, text, getIndicatorPaint());
     canvas.restore();
+
+    drawHorizonIndicators(canvas);
+  }
+
+  private void drawHorizonIndicators(Canvas c) {
+    float centerX = getCentreX();
+    float centerY = getCenterY();
+    float lineLength = getWidth() / 8;
+    float bufferSpace = getTextBufferRadius();
+    if (isLandScape(mRotation)) {
+      c.drawLine(
+          centerX,
+          centerY + bufferSpace + lineLength,
+          centerX,
+          centerY + bufferSpace,
+          getIndicatorPaint());
+      c.drawLine(
+          centerX,
+          centerY - bufferSpace - lineLength,
+          centerX,
+          centerY - bufferSpace,
+          getIndicatorPaint());
+    } else {
+      c.drawLine(
+          centerX + bufferSpace + lineLength,
+          centerY,
+          centerX + bufferSpace,
+          centerY,
+          getIndicatorPaint());
+      c.drawLine(
+          centerX - bufferSpace - lineLength,
+          centerY,
+          centerX - bufferSpace,
+          centerY,
+          getIndicatorPaint());
+    }
+  }
+
+  private boolean isLandScape(float rotation) {
+    return ((rotation > 45 && rotation < 135) || (rotation > 225 && rotation < 315));
   }
 
   private float getDisplayRotation(float mRotation) {
