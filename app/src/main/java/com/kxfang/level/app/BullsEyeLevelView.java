@@ -5,8 +5,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 
@@ -22,9 +21,12 @@ public class BullsEyeLevelView extends LevelView {
   private float mTheta = 1.0f;
   private float mRotation = 1.0f;
 
+  private RectF mArcDimensions;
+
   // Paint objects to optimize onDraw
   private Paint mTextPaint;
   private Paint mCirclePaint;
+  private Paint mArcPaint;
 
   private int mBackgroundColor = Color.BLACK;
   private int mCircleColor = Color.argb(255, 120, 120, 120);
@@ -49,7 +51,9 @@ public class BullsEyeLevelView extends LevelView {
     mCirclePaint = new Paint();
     mCirclePaint.setColor(mCircleColor);
     mCirclePaint.setAntiAlias(true);
-    mCirclePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.XOR));
+
+    mArcPaint = new Paint(getIndicatorPaint());
+    mArcPaint.setStyle(Paint.Style.STROKE);
 
     mBackgroundInterpolator = new TimeInterpolator(getBackgroundFadeDuration());
     mArgbEvaluator = new ArgbEvaluator();
@@ -68,6 +72,16 @@ public class BullsEyeLevelView extends LevelView {
     mCirclePaint.setColor(mCircleColor);
 
     invalidate();
+  }
+
+  @Override
+  protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+    super.onSizeChanged(w, h, oldw, oldh);
+    mArcDimensions = new RectF(
+        getCenterX() - getTextBufferRadius(),
+        getCenterY() - getTextBufferRadius(),
+        getCenterX() + getTextBufferRadius(),
+        getCenterY() + getTextBufferRadius());
   }
 
   @Override
@@ -99,18 +113,15 @@ public class BullsEyeLevelView extends LevelView {
             CONFIRMATION_COLOR));
 
     c.saveLayer(null, null, Canvas.MATRIX_SAVE_FLAG);
-    c.rotate(mRotation, getCentreX(), getCenterY());
+    c.rotate(mRotation, getCenterX(), getCenterY());
 
     c.drawCircle(
-        getCentreX(),
-        flat ? getCenterY() : getTopPositiveCircleY(mTheta),
-        getCircleRadius() + 5.0f,
-        mCirclePaint);
-    c.drawCircle(
-        getCentreX(),
-        flat ? getCenterY() : getBottomPositiveCircleY(mTheta),
+        getCenterX(),
+        flat ? getCenterY() : getCircleY(mTheta),
         getCircleRadius(),
         mCirclePaint);
+    c.drawArc(mArcDimensions, 135, 90, false, mArcPaint);
+    c.drawArc(mArcDimensions, 315, 90, false, mArcPaint);
     String text = Math.round(mTheta) + "°";
     drawCenterText(c, text, mTextPaint);
     c.restore();
@@ -121,16 +132,23 @@ public class BullsEyeLevelView extends LevelView {
   }
 
   private float getCircleRadius() {
-    return getWidth() / 4.0f;
+    return getTextBufferRadius() - 20.0f;
   }
 
-  private float getTopPositiveCircleY(float theta) {
+  private float getCircleY(float theta) {
+    if (mConfig == Config.DOWN) {
+      return getBottomCircleY(theta);
+    }
+    return getTopCircleY(theta);
+  }
+
+  private float getTopCircleY(float theta) {
     float circleRadius = getCircleRadius();
     return (getHeight() / 2 + circleRadius)
         * (1 - ((mConfig == Config.DOWN ? theta : 180 - theta) / 45)) - circleRadius;
   }
 
-  private float getBottomPositiveCircleY(float theta) {
-    return getHeight() - getTopPositiveCircleY(theta);
+  private float getBottomCircleY(float theta) {
+    return getHeight() - getTopCircleY(theta);
   }
 }

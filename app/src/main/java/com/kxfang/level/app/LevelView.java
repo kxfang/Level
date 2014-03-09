@@ -53,7 +53,7 @@ public abstract class LevelView extends View {
     return BACKGROUND_FADE_DURATION;
   }
 
-  protected float getCentreX() {
+  protected float getCenterX() {
     return getWidth() / 2;
   }
 
@@ -65,7 +65,7 @@ public abstract class LevelView extends View {
     paint.getTextBounds(text, 0, text.length(), mTextBounds);
     c.drawText(
         text,
-        getCentreX(),
+        getCenterX(),
         getCenterY() + (mTextBounds.bottom - mTextBounds.top)/2,
         paint);
   }

@@ -74,7 +74,7 @@ public class HorizonLevelView extends LevelView {
             CONFIRMATION_COLOR));
 
     canvas.save();
-    canvas.rotate(mRotation, getCentreX(), getCenterY());
+    canvas.rotate(mRotation, getCenterX(), getCenterY());
     canvas.save();
     canvas.translate(-10 * getWidth(), 0);
     canvas.drawRect(
@@ -92,7 +92,7 @@ public class HorizonLevelView extends LevelView {
   }
 
   private void drawHorizonIndicators(Canvas c) {
-    float centerX = getCentreX();
+    float centerX = getCenterX();
     float centerY = getCenterY();
     float lineLength = getWidth() / 8;
     float bufferSpace = getTextBufferRadius();
