@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.kxfang.level.app.BullsEyeLevelView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/view_level"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
-</com.kxfang.level.app.BullsEyeLevelView>
+    <com.kxfang.level.app.BullsEyeLevelView
+        android:id="@+id/view_bulls_eye_level"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.kxfang.level.app.HorizonLevelView
+        android:id="@+id/view_horizon_level"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:alpha="0.0" />
+
+</FrameLayout>

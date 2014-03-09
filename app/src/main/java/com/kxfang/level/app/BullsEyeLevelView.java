@@ -25,7 +25,6 @@ public class BullsEyeLevelView extends LevelView {
   private ArgbColorInterpolator mBackgroundInterpolator;
 
   private boolean mIsFlat;
-  private final int CONFIRMATION_COLOR = 0xff99cc00;
 
   /**
    * Constructor to be used to inflate the view
@@ -54,8 +53,8 @@ public class BullsEyeLevelView extends LevelView {
 
   @Override
   protected void onDataChange(float[] values) {
-    mTheta = (float) Math.toDegrees(Math.acos(values[2] / SensorManager.GRAVITY_EARTH));
-    mRotation = getRotationDegrees(values[0], values[1]);
+    mTheta = OrientationUtils.getDeviceTilt(values[2]);
+    mRotation = OrientationUtils.getRotationDegrees(values[0], values[1]);
   }
 
   @Override
@@ -89,13 +88,7 @@ public class BullsEyeLevelView extends LevelView {
         getCircleRadius(),
         mPositiveCirclePaint);
     String text = (int) mTheta + "°";
-    Rect textBounds = new Rect();
-    mTextPaint.getTextBounds(text, 0, text.length(), textBounds);
-    c.drawText(
-        text,
-        getCentreX(),
-        getCenterY() + (textBounds.bottom - textBounds.top)/2,
-        mTextPaint);
+    drawCenterText(c, text, mTextPaint);
     c.restore();
   }
 
@@ -108,18 +101,10 @@ public class BullsEyeLevelView extends LevelView {
   }
 
   private float getTopPositiveCircleY(float theta) {
-    return (getHeight() / 2) * (1 - (theta / 45));
+    return (getHeight() / 2) * (1 - (theta / 35));
   }
 
   private float getBottomPositiveCircleY(float theta) {
     return getHeight() - getTopPositiveCircleY(theta);
-  }
-
-  private float getCentreX() {
-    return getWidth() / 2;
-  }
-
-  private float getCenterY() {
-    return getHeight() / 2;
   }
 }

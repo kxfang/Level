@@ -1,5 +1,7 @@
 package com.kxfang.level.app;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Fragment;
 import android.content.Context;
 import android.hardware.Sensor;
@@ -7,6 +9,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +29,9 @@ public class LevelFragment extends Fragment {
   private static final String TAG = "LevelFragment";
 
   private SensorManager mSensorManager;
-  private BullsEyeLevelView mBullsEyeLevelView;
+  private LevelView mBullsEyeLevelView;
+  private LevelView mHorizonLevelView;
+  private LevelView mActiveLevelView;
 
   // List of filters for sensor data to pass through
   private volatile List<? extends FloatFilter> mFilterChain;
@@ -46,7 +51,15 @@ public class LevelFragment extends Fragment {
         }
       }
 
-      mBullsEyeLevelView.render(filteredValues);
+      mActiveLevelView.render(filteredValues);
+
+      if (OrientationUtils.getDeviceTilt(filteredValues[2]) > 45.5f
+          && mActiveLevelView != mHorizonLevelView) {
+        setActiveLevelView(mHorizonLevelView);
+      } else if (OrientationUtils.getDeviceTilt(filteredValues[2]) <= 44.5f
+          && mActiveLevelView != mBullsEyeLevelView) {
+        setActiveLevelView(mBullsEyeLevelView);
+      }
     }
 
     @Override
@@ -54,6 +67,40 @@ public class LevelFragment extends Fragment {
       // Do nothing
     }
   };
+
+  private void setActiveLevelView(LevelView levelView) {
+    if (mActiveLevelView == null) {
+      mActiveLevelView = levelView;
+    } else if (mActiveLevelView != levelView) {
+      if (mActiveLevelView.getAnimation() != null || levelView.getAnimation() != null) {
+        mActiveLevelView.clearAnimation();
+        levelView.clearAnimation();
+      } else {
+        levelView.setAlpha(0f);
+        levelView.setVisibility(View.VISIBLE);
+      }
+
+      levelView
+          .animate()
+          .alpha(1.0f)
+          .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
+          .start();
+
+      mActiveLevelView
+          .animate()
+          .alpha(0.0f)
+          .setDuration(getResources().getInteger(android.R.integer.config_shortAnimTime))
+          .setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+//              mActiveLevelView.setVisibility(View.GONE);
+            }
+          })
+          .start();
+
+      mActiveLevelView = levelView;
+    }
+  }
 
   // Public methods
   public void setFilterChain(List<? extends FloatFilter> filterChain) {
@@ -84,7 +131,9 @@ public class LevelFragment extends Fragment {
   @Override
   public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    mBullsEyeLevelView = (BullsEyeLevelView) view.findViewById(R.id.view_level);
+    mBullsEyeLevelView = (LevelView) view.findViewById(R.id.view_bulls_eye_level);
+    mHorizonLevelView = (LevelView) view.findViewById(R.id.view_horizon_level);
+    setActiveLevelView(mBullsEyeLevelView);
   }
 
   @Override
