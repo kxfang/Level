@@ -20,6 +20,7 @@ public abstract class LevelView extends View {
   private final long BACKGROUND_FADE_DURATION;
   private final float INDICATOR_TEXT_SIZE = 200.0f;
   private final float INDICATOR_STROKE_WIDTH = 5.0f;
+  private final int NUM_HORIZON_INDICATORS = 3;
 
   private Paint mIndicatorPaint;
 
@@ -96,7 +97,7 @@ public abstract class LevelView extends View {
   @Override
   protected void onSizeChanged(int w, int h, int oldw, int oldh) {
     super.onSizeChanged(w, h, oldw, oldh);
-    mHorizonIndicatorLength = w / 8;
+    mHorizonIndicatorLength = w / 7;
   }
 
   protected float getCenterX() {
@@ -133,31 +134,38 @@ public abstract class LevelView extends View {
     float centerY = getCenterY();
     float bufferSpace = getTextBufferRadius();
     if (isLandscape) {
-      c.drawLine(
-          centerX,
-          centerY + bufferSpace + lineLength,
-          centerX,
-          centerY + bufferSpace,
-          getIndicatorPaint());
-      c.drawLine(
-          centerX,
-          centerY - bufferSpace - lineLength,
-          centerX,
-          centerY - bufferSpace,
-          getIndicatorPaint());
+      bufferSpace *= 1.3;
+      for (int i = NUM_HORIZON_INDICATORS * -1 + 1; i < NUM_HORIZON_INDICATORS; i++) {
+        float increment = i * (getWidth() / NUM_HORIZON_INDICATORS / 2);
+        c.drawLine(
+            centerX + increment,
+            centerY + bufferSpace + lineLength * (1 - 1.0f / (Math.abs(i) + 1)),
+            centerX + increment,
+            centerY + bufferSpace + lineLength,
+            getIndicatorPaint());
+        c.drawLine(
+            centerX - increment,
+            centerY - bufferSpace - lineLength * (1 - 1.0f / (Math.abs(i) + 1)),
+            centerX - increment,
+            centerY - bufferSpace - lineLength,
+            getIndicatorPaint());
+      }
     } else {
-      c.drawLine(
-          centerX + bufferSpace + lineLength,
-          centerY,
-          centerX + bufferSpace,
-          centerY,
-          getIndicatorPaint());
-      c.drawLine(
-          centerX - bufferSpace - lineLength,
-          centerY,
-          centerX - bufferSpace,
-          centerY,
-          getIndicatorPaint());
+      for (int i = NUM_HORIZON_INDICATORS * -1 + 1; i < NUM_HORIZON_INDICATORS; i++) {
+        float increment = i * (getHeight() / NUM_HORIZON_INDICATORS / 2);
+        c.drawLine(
+            centerX + bufferSpace + lineLength * (1 - 1.0f / (Math.abs(i) + 1)),
+            centerY + increment,
+            centerX + bufferSpace + lineLength,
+            centerY + increment,
+            getIndicatorPaint());
+        c.drawLine(
+            centerX - bufferSpace - lineLength * (1 - 1.0f / (Math.abs(i) + 1)),
+            centerY - increment,
+            centerX - bufferSpace - lineLength,
+            centerY - increment,
+            getIndicatorPaint());
+      }
     }
   }
 
