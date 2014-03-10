@@ -2,21 +2,24 @@ package com.kxfang.level.app;
 
 import android.animation.FloatEvaluator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.kxfang.level.app.color.ColorSet;
 
 /**
  * Abstract view that renders the level data from a sensor.
  */
 public abstract class LevelView extends View {
-  public static final int CONFIRMATION_COLOR = 0xff99cc00;
-  public static final int CONFIRMATION_COLOR_ACCENT = Color.argb(255, 201, 233, 123);
-
   private final long BACKGROUND_FADE_DURATION;
+  private final float INDICATOR_TEXT_SIZE = 200.0f;
+  private final float INDICATOR_STROKE_WIDTH = 5.0f;
 
   private Paint mIndicatorPaint;
 
@@ -25,20 +28,38 @@ public abstract class LevelView extends View {
 
   private FloatEvaluator mFloatEvaluator;
 
+  private ColorSet mColorSet;
+  private ColorSet mAlignmentColorSet;
+
   public LevelView(Context context, AttributeSet attrs) {
     super(context, attrs);
     BACKGROUND_FADE_DURATION =
         context.getResources().getInteger(android.R.integer.config_shortAnimTime);
+
     mTextBounds = new Rect();
+
+    TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.LevelView);
+    String indicatorTypeface = null;
+    try {
+      indicatorTypeface = typedArray.getString(R.styleable.LevelView_typeface);
+    } finally {
+      typedArray.recycle();
+    }
 
     mIndicatorPaint = new Paint();
     mIndicatorPaint.setAntiAlias(true);
-    mIndicatorPaint.setColor(Color.WHITE);
-    mIndicatorPaint.setTextSize(200.0f);
+    mIndicatorPaint.setTextSize(INDICATOR_TEXT_SIZE);
     mIndicatorPaint.setTextAlign(Paint.Align.CENTER);
-    mIndicatorPaint.setStrokeWidth(5.0f);
+    mIndicatorPaint.setStrokeWidth(INDICATOR_STROKE_WIDTH);
+    if (indicatorTypeface != null) {
+      mIndicatorPaint.setTypeface(Typeface.create(indicatorTypeface, Typeface.NORMAL));
+    }
 
     mFloatEvaluator = new FloatEvaluator();
+
+    mColorSet = ColorSet.greenColorSet(context);
+
+    mAlignmentColorSet = ColorSet.greenColorSet(context);
   }
 
   /**
@@ -47,6 +68,19 @@ public abstract class LevelView extends View {
   public void render(float[] values) {
     onDataChange(values);
     invalidate();
+  }
+
+  public void setColorSet(ColorSet colorSet) {
+    mIndicatorPaint.setColor(mColorSet.getForegroundColor());
+    mColorSet = colorSet;
+  }
+
+  protected ColorSet getColorSet() {
+    return mColorSet;
+  }
+
+  protected ColorSet getAlignmentColorSet() {
+    return mAlignmentColorSet;
   }
 
   /**

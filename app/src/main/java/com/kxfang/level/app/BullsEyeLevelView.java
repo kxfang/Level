@@ -3,11 +3,12 @@ package com.kxfang.level.app;
 import android.animation.ArgbEvaluator;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
+
+import com.kxfang.level.app.color.ColorSet;
 
 public class BullsEyeLevelView extends LevelView {
 
@@ -34,9 +35,6 @@ public class BullsEyeLevelView extends LevelView {
   private Paint mCirclePaint;
   private Paint mArcPaint;
 
-  private int mBackgroundColor = Color.BLACK;
-  private int mCircleColor = Color.argb(255, 120, 120, 120);
-
   private TimeInterpolator mBackgroundInterpolator;
   private ArgbEvaluator mArgbEvaluator;
 
@@ -55,7 +53,6 @@ public class BullsEyeLevelView extends LevelView {
     mTextPaint = getIndicatorPaint();
 
     mCirclePaint = new Paint();
-    mCirclePaint.setColor(mCircleColor);
     mCirclePaint.setAntiAlias(true);
 
     mArcPaint = new Paint(getIndicatorPaint());
@@ -71,11 +68,9 @@ public class BullsEyeLevelView extends LevelView {
     }
     mConfig = config;
 
-    int temp = mBackgroundColor;
-    mBackgroundColor = mCircleColor;
-    mCircleColor = temp;
-
-    mCirclePaint.setColor(mCircleColor);
+    getColorSet().invert();
+    getAlignmentColorSet().invert();
+    updatePaintColors();
 
     mArcIndicatorTransformStartTilt = 180 - mArcIndicatorTransformStartTilt;
     mArcIndicatorTransformEndTilt = 180 - mArcIndicatorTransformEndTilt;
@@ -93,6 +88,12 @@ public class BullsEyeLevelView extends LevelView {
         getCenterY() - getTextBufferRadius(),
         getCenterX() + getTextBufferRadius(),
         getCenterY() + getTextBufferRadius());
+  }
+
+  @Override
+  public void setColorSet(ColorSet cs) {
+    super.setColorSet(cs);
+    updatePaintColors();
   }
 
   @Override
@@ -120,12 +121,17 @@ public class BullsEyeLevelView extends LevelView {
     c.drawColor(
         (Integer) mArgbEvaluator.evaluate(
             mBackgroundInterpolator.getProgress(),
-            mBackgroundColor,
-            CONFIRMATION_COLOR));
+            getColorSet().getSecondaryColor(),
+            getAlignmentColorSet().getSecondaryColor()));
 
     c.saveLayer(null, null, Canvas.MATRIX_SAVE_FLAG);
     c.rotate(mRotation, getCenterX(), getCenterY());
 
+    mCirclePaint.setColor(
+        (Integer) mArgbEvaluator.evaluate(
+            mBackgroundInterpolator.getProgress(),
+            getColorSet().getPrimaryColor(),
+            getAlignmentColorSet().getPrimaryColor()));
     c.drawCircle(
         getCenterX(),
         flat ? getCenterY() : getCircleY(mTilt),
@@ -145,6 +151,11 @@ public class BullsEyeLevelView extends LevelView {
             0,
             getHorizonIndicatorLength()),
         OrientationUtils.isLandscape(mRotation));
+  }
+
+  private void updatePaintColors() {
+    mCirclePaint.setColor(getColorSet().getPrimaryColor());
+    mArcPaint.setColor(getColorSet().getForegroundColor());
   }
 
   private void drawArcIndicators(Canvas c) {

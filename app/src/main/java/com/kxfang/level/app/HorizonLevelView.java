@@ -3,10 +3,8 @@ package com.kxfang.level.app;
 import android.animation.ArgbEvaluator;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 
 /**
  * Level view with a horizon indicating whether device is parallel to horizon.
@@ -21,9 +19,7 @@ public class HorizonLevelView extends LevelView {
   private float mTilt;
   private boolean mIsLevel;
 
-  private int mHorizonColor = Color.BLACK;
-  private int mBackgroundColor = Color.argb(255, 231, 229, 229);
-  private TimeInterpolator mConfirmationTransitionInterpolator;
+  private TimeInterpolator mAlignmentTransitionInterpolator;
   private ArgbEvaluator mColorEvaluator;
 
   private Paint mHorizonPaint;
@@ -33,10 +29,9 @@ public class HorizonLevelView extends LevelView {
 
     mHorizonPaint = new Paint();
     mHorizonPaint.setStyle(Paint.Style.FILL);
-    mHorizonPaint.setColor(mHorizonColor);
     mHorizonPaint.setAntiAlias(true);
 
-    mConfirmationTransitionInterpolator = new TimeInterpolator(getBackgroundFadeDuration());
+    mAlignmentTransitionInterpolator = new TimeInterpolator(getBackgroundFadeDuration());
     mColorEvaluator = new ArgbEvaluator();
 
     mIsLevel = false;
@@ -51,30 +46,30 @@ public class HorizonLevelView extends LevelView {
   @Override
   protected void onDraw(Canvas canvas) {
     super.onDraw(canvas);
-    canvas.drawColor(mBackgroundColor);
+    canvas.drawColor(getColorSet().getPrimaryColor());
 
     float displayRotation = getDisplayRotation(mRotation);
     boolean isLevel = isLevel(displayRotation);
     if (isLevel != mIsLevel) {
       if (isLevel) {
-        mConfirmationTransitionInterpolator.start();
+        mAlignmentTransitionInterpolator.start();
       } else {
-        mConfirmationTransitionInterpolator.reverse();
+        mAlignmentTransitionInterpolator.reverse();
       }
       mIsLevel = isLevel;
     }
 
-    float progress = mConfirmationTransitionInterpolator.getProgress();
+    float progress = mAlignmentTransitionInterpolator.getProgress();
     canvas.drawColor((Integer) mColorEvaluator.evaluate(
         progress,
-        mBackgroundColor,
-        CONFIRMATION_COLOR_ACCENT
+        getColorSet().getPrimaryColor(),
+        getAlignmentColorSet().getPrimaryColor()
     ));
     mHorizonPaint.setColor(
         (Integer) mColorEvaluator.evaluate(
             progress,
-            mHorizonColor,
-            CONFIRMATION_COLOR));
+            getColorSet().getSecondaryColor(),
+            getAlignmentColorSet().getSecondaryColor()));
 
     canvas.save();
     canvas.rotate(mRotation, getCenterX(), getCenterY());

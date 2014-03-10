@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="green">
+        <item>#FFC9E97B</item>
+        <item>#FF99CC00</item>
+    </array>
+    <array name="blue">
+        <item>#FF33B5E5</item>
+        <item>#FF0099CC</item>
+    </array>
+    <array name="orange">
+        <item>#FFFFBB33</item>
+        <item>#FFFF8800</item>
+    </array>
+    <array name="purple">
+        <item>#FFAA66CC</item>
+        <item>#FF9933CC</item>
+    </array>
+    <array name="red">
+        <item>#FFFF4444</item>
+        <item>#FFCC0000</item>
+    </array>
+</resources>

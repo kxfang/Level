@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:custom="http://schemas.android.com/apk/res-auto"
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
     <com.kxfang.level.app.BullsEyeLevelView
         android:id="@+id/view_bulls_eye_level"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        custom:typeface="sans-serif-thin" />
 
     <com.kxfang.level.app.HorizonLevelView
         android:id="@+id/view_horizon_level"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:visibility="gone"
+        custom:typeface="sans-serif-thin" />
 
 </FrameLayout>

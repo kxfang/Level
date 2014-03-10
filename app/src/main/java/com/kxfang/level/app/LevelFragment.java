@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.kxfang.level.app.color.ColorSet;
 import com.kxfang.level.app.filter.FloatFilter;
 import com.kxfang.level.app.filter.MovingAverageFilter;
 
@@ -74,6 +75,7 @@ public class LevelFragment extends Fragment {
   private void setActiveLevelView(LevelView levelView) {
     if (mActiveLevelView == null) {
       mActiveLevelView = levelView;
+      levelView.setVisibility(View.VISIBLE);
     } else if (mActiveLevelView != levelView) {
       levelView.setVisibility(View.VISIBLE);
       mActiveLevelView.setVisibility(View.GONE);
@@ -112,7 +114,9 @@ public class LevelFragment extends Fragment {
     super.onViewCreated(view, savedInstanceState);
     mBullsEyeLevelView = (BullsEyeLevelView) view.findViewById(R.id.view_bulls_eye_level);
     mHorizonLevelView = (HorizonLevelView) view.findViewById(R.id.view_horizon_level);
-    setActiveLevelView(mBullsEyeLevelView);
+    ColorSet cs = ColorSet.randomColorSet(getActivity());
+    mBullsEyeLevelView.setColorSet(cs);
+    mHorizonLevelView.setColorSet(ColorSet.copyOf(cs));
   }
 
   @Override
