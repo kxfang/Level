@@ -17,10 +17,10 @@ public class BullsEyeLevelView extends LevelView {
     UP
   }
 
-  private final int ARC_INDICATOR_TRANSFORM_START_TILT = 17;
-  private final int ARC_INDICATOR_TRANSFORM_END_TILT = 30;
-  private final int LINE_INDICATOR_TRANSFORM_START_TILT = 32;
-  private final int LINE_INDICATOR_TRANSFORM_END_TILT = 44;
+  private int mArcIndicatorTransformStartTilt = 17;
+  private int mArcIndicatorTransformEndTilt = 30;
+  private int mLineIndicatorTransformStartTilt = 32;
+  private int mLineIndicatorTransformEndTilt = 44;
 
 
   private Config mConfig;
@@ -80,6 +80,11 @@ public class BullsEyeLevelView extends LevelView {
 
     mCirclePaint.setColor(mCircleColor);
 
+    mArcIndicatorTransformStartTilt = 180 - mArcIndicatorTransformStartTilt;
+    mArcIndicatorTransformEndTilt = 180 - mArcIndicatorTransformEndTilt;
+    mLineIndicatorTransformStartTilt = 180 - mLineIndicatorTransformStartTilt;
+    mLineIndicatorTransformEndTilt = 180 - mLineIndicatorTransformEndTilt;
+
     invalidate();
   }
 
@@ -138,16 +143,16 @@ public class BullsEyeLevelView extends LevelView {
         c,
         getIndicatorValue(
             mTilt,
-            LINE_INDICATOR_TRANSFORM_START_TILT,
-            LINE_INDICATOR_TRANSFORM_END_TILT,
+            mLineIndicatorTransformStartTilt,
+            mLineIndicatorTransformEndTilt,
             0,
             getHorizonIndicatorLength()),
         OrientationUtils.isLandscape(mRotation));
   }
 
   private void drawArcIndicators(Canvas c) {
-    float tiltStart = ARC_INDICATOR_TRANSFORM_START_TILT;
-    float tiltEnd = ARC_INDICATOR_TRANSFORM_END_TILT;
+    float tiltStart = mArcIndicatorTransformStartTilt;
+    float tiltEnd = mArcIndicatorTransformEndTilt;
     c.drawArc(
         mArcDimensions,
         getIndicatorValue(mTilt, tiltStart, tiltEnd, 135, 180),
