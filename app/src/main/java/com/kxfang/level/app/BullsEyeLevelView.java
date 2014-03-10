@@ -162,7 +162,16 @@ public class BullsEyeLevelView extends LevelView {
         false,
         mArcPaint);
 
-    drawHorizonIndicators(c, getIndicatorValue(mTilt, tiltStart, tiltEnd, 35, 0), false);
+    for (int i = -1; i <= 1; i+=2) {
+      c.drawLine(
+          getCenterX() + i * getTextBufferRadius(),
+          getCenterY(),
+          getCenterX()
+              + i * (getTextBufferRadius() + getIndicatorValue(mTilt, tiltStart, tiltEnd, 35, 0)),
+          getCenterY(),
+          getIndicatorPaint()
+      );
+    }
   }
 
   private float getIndicatorValue(
