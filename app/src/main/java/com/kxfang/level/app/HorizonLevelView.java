@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 
 /**
  * Level view with a horizon indicating whether device is parallel to horizon.
@@ -14,6 +15,8 @@ public class HorizonLevelView extends LevelView {
 
   private final float HORIZON_TILT_THRESHOLD = 45.5f;
   private final float HORIZON_TILT = 90.0f;
+  private final float LINE_INDICATOR_TRANSFORM_START = 30;
+  private final float LINE_INDICATOR_TRANSFORM_END = 44;
   private float mRotation;
   private float mTilt;
   private boolean mIsLevel;
@@ -90,7 +93,12 @@ public class HorizonLevelView extends LevelView {
 
     drawHorizonIndicators(
         canvas,
-        getHorizonIndicatorLength(),
+        getTransformValue(
+            Math.abs(displayRotation),
+            LINE_INDICATOR_TRANSFORM_START,
+            LINE_INDICATOR_TRANSFORM_END,
+            getHorizonIndicatorLength(),
+            0),
         OrientationUtils.isLandscape(mRotation));
   }
 

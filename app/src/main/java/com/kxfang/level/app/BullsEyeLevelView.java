@@ -1,7 +1,6 @@
 package com.kxfang.level.app;
 
 import android.animation.ArgbEvaluator;
-import android.animation.FloatEvaluator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -40,7 +39,6 @@ public class BullsEyeLevelView extends LevelView {
 
   private TimeInterpolator mBackgroundInterpolator;
   private ArgbEvaluator mArgbEvaluator;
-  private FloatEvaluator mFloatEvaluator;
 
   private boolean mIsFlat;
 
@@ -65,7 +63,6 @@ public class BullsEyeLevelView extends LevelView {
 
     mBackgroundInterpolator = new TimeInterpolator(getBackgroundFadeDuration());
     mArgbEvaluator = new ArgbEvaluator();
-    mFloatEvaluator = new FloatEvaluator();
   }
 
   public void setConfig(Config config) {
@@ -141,7 +138,7 @@ public class BullsEyeLevelView extends LevelView {
 
     drawHorizonIndicators(
         c,
-        getIndicatorValue(
+        getTransformValue(
             mTilt,
             mLineIndicatorTransformStartTilt,
             mLineIndicatorTransformEndTilt,
@@ -155,15 +152,15 @@ public class BullsEyeLevelView extends LevelView {
     float tiltEnd = mArcIndicatorTransformEndTilt;
     c.drawArc(
         mArcDimensions,
-        getIndicatorValue(mTilt, tiltStart, tiltEnd, 135, 180),
-        getIndicatorValue(mTilt, tiltStart, tiltEnd, 90, 0),
+        getTransformValue(mTilt, tiltStart, tiltEnd, 135, 180),
+        getTransformValue(mTilt, tiltStart, tiltEnd, 90, 0),
         false,
         mArcPaint);
 
     c.drawArc(
         mArcDimensions,
-        getIndicatorValue(mTilt, tiltStart, tiltEnd, 315, 360),
-        getIndicatorValue(mTilt, tiltStart, tiltEnd, 90, 0),
+        getTransformValue(mTilt, tiltStart, tiltEnd, 315, 360),
+        getTransformValue(mTilt, tiltStart, tiltEnd, 90, 0),
         false,
         mArcPaint);
 
@@ -172,25 +169,11 @@ public class BullsEyeLevelView extends LevelView {
           getCenterX() + i * getTextBufferRadius(),
           getCenterY(),
           getCenterX()
-              + i * (getTextBufferRadius() + getIndicatorValue(mTilt, tiltStart, tiltEnd, 35, 0)),
+              + i * (getTextBufferRadius() + getTransformValue(mTilt, tiltStart, tiltEnd, 35, 0)),
           getCenterY(),
           getIndicatorPaint()
       );
     }
-  }
-
-  private float getIndicatorValue(
-      float tilt,
-      float tiltStart,
-      float tiltEnd,
-      float start,
-      float end) {
-    float fraction =
-        Math.max(
-            0,
-            Math.min(1, (tilt - tiltStart) / (tiltEnd - tiltStart)));
-
-    return mFloatEvaluator.evaluate(fraction, start, end);
   }
 
   private boolean isFlat(float theta, float rotation) {

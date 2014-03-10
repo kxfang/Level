@@ -1,5 +1,6 @@
 package com.kxfang.level.app;
 
+import android.animation.FloatEvaluator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -22,6 +23,8 @@ public abstract class LevelView extends View {
   private Rect mTextBounds;
   private float mHorizonIndicatorLength;
 
+  private FloatEvaluator mFloatEvaluator;
+
   public LevelView(Context context, AttributeSet attrs) {
     super(context, attrs);
     BACKGROUND_FADE_DURATION =
@@ -34,6 +37,8 @@ public abstract class LevelView extends View {
     mIndicatorPaint.setTextSize(200.0f);
     mIndicatorPaint.setTextAlign(Paint.Align.CENTER);
     mIndicatorPaint.setStrokeWidth(5.0f);
+
+    mFloatEvaluator = new FloatEvaluator();
   }
 
   /**
@@ -120,5 +125,20 @@ public abstract class LevelView extends View {
           centerY,
           getIndicatorPaint());
     }
+  }
+
+
+  protected float getTransformValue(
+      float tilt,
+      float tiltStart,
+      float tiltEnd,
+      float start,
+      float end) {
+    float fraction =
+        Math.max(
+            0,
+            Math.min(1, (tilt - tiltStart) / (tiltEnd - tiltStart)));
+
+    return mFloatEvaluator.evaluate(fraction, start, end);
   }
 }
