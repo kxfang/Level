@@ -51,8 +51,6 @@ public class LevelFragment extends Fragment {
         }
       }
 
-      mActiveLevelView.render(filteredValues);
-
       float deviceTilt = OrientationUtils.getDeviceTilt(filteredValues[2]);
       if (deviceTilt > 45.5f
           && deviceTilt < 134.5f) {
@@ -64,6 +62,7 @@ public class LevelFragment extends Fragment {
         mBullsEyeLevelView.setConfig(BullsEyeLevelView.Config.UP);
         setActiveLevelView(mBullsEyeLevelView);
       }
+      mActiveLevelView.render(filteredValues);
     }
 
     @Override
