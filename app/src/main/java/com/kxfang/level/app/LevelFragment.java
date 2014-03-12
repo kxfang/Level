@@ -122,7 +122,7 @@ public class LevelFragment extends Fragment {
     mSensorManager.registerListener(
         mSensorEventListener,
         mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY),
-        SensorManager.SENSOR_DELAY_GAME);
+        SensorManager.SENSOR_DELAY_FASTEST);
   }
 
   @Override
