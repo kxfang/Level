@@ -65,8 +65,8 @@ public abstract class LevelView extends View {
   /**
    * Notify that the view should re-render according to new data values.
    */
-  public void render(float[] values) {
-    onDataChange(values);
+  public void setPosition(DevicePosition position) {
+    onDataChange(position);
     invalidate();
   }
 
@@ -85,9 +85,8 @@ public abstract class LevelView extends View {
 
   /**
    * Method to be overriden by subclasses to change their state when the sensor data changes.
-   * @param values the new data values.
    */
-  protected abstract void onDataChange(float[] values);
+  protected abstract void onDataChange(DevicePosition position);
 
   protected long getBackgroundFadeDuration() {
     return BACKGROUND_FADE_DURATION;

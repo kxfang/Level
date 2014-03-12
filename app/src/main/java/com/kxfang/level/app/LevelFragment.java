@@ -30,6 +30,8 @@ public class LevelFragment extends Fragment {
   private HorizonLevelView mHorizonLevelView;
   private LevelView mActiveLevelView;
 
+  private DevicePosition mLevelViewPosition;
+
   // List of filters for sensor data to pass through
   private volatile List<? extends FloatFilter> mFilterChain;
 
@@ -59,7 +61,11 @@ public class LevelFragment extends Fragment {
         mBullsEyeLevelView.setConfig(BullsEyeLevelView.Config.UP);
         setActiveLevelView(mBullsEyeLevelView);
       }
-      mActiveLevelView.render(filteredValues);
+      mLevelViewPosition.setRotation(
+          OrientationUtils.getRotationDegrees(filteredValues[0], filteredValues[1]));
+      mLevelViewPosition.setTilt(
+          OrientationUtils.getDeviceTilt(filteredValues[2]));
+      mActiveLevelView.setPosition(mLevelViewPosition);
     }
 
     @Override
@@ -95,6 +101,8 @@ public class LevelFragment extends Fragment {
     if (mFilterChain == null) {
       mFilterChain = Collections.emptyList();
     }
+
+    mLevelViewPosition = new DevicePosition(0, 0);
 
     mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
   }

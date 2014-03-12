@@ -38,9 +38,9 @@ public class HorizonLevelView extends LevelView {
   }
 
   @Override
-  protected void onDataChange(float[] values) {
-    mRotation = OrientationUtils.getRotationDegrees(values[0], values[1]);
-    mTilt = OrientationUtils.getDeviceTilt(values[2]);
+  protected void onDataChange(DevicePosition position) {
+    mRotation = position.getRotation();
+    mTilt = position.getTilt();
   }
 
   @Override

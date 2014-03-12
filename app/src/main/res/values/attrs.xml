@@ -2,5 +2,6 @@
 <resources>
     <declare-styleable name="LevelView">
         <attr name="typeface" format="string" />
+        <attr name="showTransition" format="boolean" />
     </declare-styleable>
 </resources>

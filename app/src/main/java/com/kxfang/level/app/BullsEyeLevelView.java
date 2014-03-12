@@ -107,9 +107,9 @@ public class BullsEyeLevelView extends LevelView {
   }
 
   @Override
-  protected void onDataChange(float[] values) {
-    mTilt = OrientationUtils.getDeviceTilt(values[2]);
-    mRotation = OrientationUtils.getRotationDegrees(values[0], values[1]);
+  protected void onDataChange(DevicePosition position) {
+    mTilt = position.getTilt();
+    mRotation = position.getRotation();
 
     // Cache the device rotation when it is meaningfully tilted so we can make the 0 face the user
     // when the device is in alignment.
