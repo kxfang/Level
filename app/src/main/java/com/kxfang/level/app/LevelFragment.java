@@ -13,7 +13,9 @@ import android.view.ViewGroup;
 
 import com.kxfang.level.app.color.ColorSet;
 import com.kxfang.level.app.filter.FloatFilter;
+import com.kxfang.level.app.filter.LowPassFilter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -32,23 +34,11 @@ public class LevelFragment extends Fragment {
 
   private DevicePosition mLevelViewPosition;
 
-  // List of filters for sensor data to pass through
-  private volatile List<? extends FloatFilter> mFilterChain;
-
   // SensorEventListener
-  private SensorEventListener mSensorEventListener = new SensorEventListener() {
+  private FilteringSensorListener mSensorEventListener = new FilteringSensorListener(new SensorEventListener() {
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
       float [] filteredValues = Arrays.copyOf(sensorEvent.values, sensorEvent.values.length);
-
-      // Copy the filter chain reference in case it changes
-      List<? extends FloatFilter> filterChain = mFilterChain;
-
-      for (int i = 0; i < sensorEvent.values.length; i++) {
-        for (FloatFilter filter : filterChain) {
-          filteredValues[i] = filter.next(filteredValues[i]);
-        }
-      }
 
       float deviceTilt = OrientationUtils.getDeviceTilt(filteredValues[2]);
       if (deviceTilt > 45.5f
@@ -72,7 +62,7 @@ public class LevelFragment extends Fragment {
     public void onAccuracyChanged(Sensor sensor, int i) {
       // Do nothing
     }
-  };
+  }, new ArrayList<FloatFilter>());
 
   private void setActiveLevelView(LevelView levelView) {
     if (mActiveLevelView == null) {
@@ -88,9 +78,9 @@ public class LevelFragment extends Fragment {
   // Public methods
   public void setFilterChain(List<? extends FloatFilter> filterChain) {
     if (filterChain == null) {
-      mFilterChain = Collections.emptyList();
+      mSensorEventListener.setFilters(new ArrayList<FloatFilter>());
     } else {
-      mFilterChain = filterChain;
+      mSensorEventListener.setFilters(filterChain);
     }
   }
 
@@ -98,11 +88,9 @@ public class LevelFragment extends Fragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    if (mFilterChain == null) {
-      mFilterChain = Collections.emptyList();
-    }
-
     mLevelViewPosition = new DevicePosition(0, 0);
+
+    setFilterChain(Collections.singletonList(new LowPassFilter(0.75f, 0.008f)));
 
     mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
   }
