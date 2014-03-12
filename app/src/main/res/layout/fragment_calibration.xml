@@ -9,15 +9,6 @@
         android:id="@+id/view_bulls_eye_level"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        custom:typeface="sans-serif-thin"
-        custom:showTransition="true" />
-
-    <com.kxfang.level.app.HorizonLevelView
-        android:id="@+id/view_horizon_level"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
         custom:typeface="sans-serif-thin" />
 
 </FrameLayout>

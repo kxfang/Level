@@ -3,6 +3,8 @@ package com.kxfang.level.app;
 import android.animation.ArgbEvaluator;
 import android.animation.FloatEvaluator;
 import android.content.Context;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
@@ -25,6 +27,7 @@ public class BullsEyeLevelView extends LevelView {
 
 
   private Config mConfig;
+  private boolean mShowTransition;
 
   private float mTilt = 1.0f;
   private float mRotation = 1.0f;
@@ -55,6 +58,12 @@ public class BullsEyeLevelView extends LevelView {
 
     mConfig = Config.DOWN;
     mIsFlat = false;
+    TypedArray attributes = context.getResources().obtainAttributes(attrs, R.styleable.LevelView);
+    try {
+      mShowTransition = attributes.getBoolean(R.styleable.LevelView_showTransition, false);
+    } finally {
+      attributes.recycle();
+    }
 
     // TODO: refactor into xml
     mTextPaint = getIndicatorPaint();
