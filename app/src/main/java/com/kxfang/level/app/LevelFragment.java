@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.kxfang.level.app.color.ColorSet;
 import com.kxfang.level.app.filter.FloatFilter;
+import com.kxfang.level.app.filter.LowPassFilter;
 import com.kxfang.level.app.filter.MovingAverageFilter;
 
 import java.util.Arrays;
@@ -96,7 +97,7 @@ public class LevelFragment extends Fragment {
     }
 
     // TODO: Pass in filter chain elsewhere
-    setFilterChain(Collections.singletonList(new MovingAverageFilter(10)));
+    setFilterChain(Collections.singletonList(new LowPassFilter(0.25f)));
 
     mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
   }
