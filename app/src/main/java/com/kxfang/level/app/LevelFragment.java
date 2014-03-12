@@ -84,6 +84,8 @@ public class LevelFragment extends Fragment {
   public void setFilterChain(List<? extends FloatFilter> filterChain) {
     if (filterChain == null) {
       mFilterChain = Collections.emptyList();
+    } else {
+      mFilterChain = filterChain;
     }
   }
 
