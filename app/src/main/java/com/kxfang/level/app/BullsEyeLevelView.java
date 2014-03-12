@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import com.kxfang.level.app.color.ColorSet;
 
@@ -110,10 +109,8 @@ public class BullsEyeLevelView extends LevelView {
     if (flat != mIsFlat) {
       if (flat && !mIsFlat) {
         mBackgroundInterpolator.start();
-        Log.d("FLAT", "starting");
       } else if (!flat && mIsFlat) {
         mBackgroundInterpolator.reverse();
-        Log.d("FLAT", "reversing");
       }
       mIsFlat = flat;
     }
