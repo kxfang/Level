@@ -44,6 +44,11 @@ public class TimeInterpolator {
     }
   }
 
+  public void reset() {
+    mReversed = false;
+    mStartTime = 0;
+  }
+
   private void setNow() {
     mNowMillis = System.currentTimeMillis();
   }

@@ -34,7 +34,7 @@ public abstract class LevelView extends View {
   public LevelView(Context context, AttributeSet attrs) {
     super(context, attrs);
     BACKGROUND_FADE_DURATION =
-        context.getResources().getInteger(android.R.integer.config_shortAnimTime);
+        context.getResources().getInteger(android.R.integer.config_longAnimTime);
 
     mTextBounds = new Rect();
 

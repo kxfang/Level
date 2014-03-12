@@ -1,11 +1,13 @@
 package com.kxfang.level.app;
 
 import android.animation.ArgbEvaluator;
+import android.animation.FloatEvaluator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.kxfang.level.app.color.ColorSet;
 
@@ -35,9 +37,14 @@ public class BullsEyeLevelView extends LevelView {
   private Paint mArcPaint;
 
   private TimeInterpolator mBackgroundInterpolator;
+  private TimeInterpolator mRotationInterpolator;
   private ArgbEvaluator mArgbEvaluator;
+  private FloatEvaluator mFloatEvaluator;
+  private AccelerateDecelerateInterpolator mAnimationInterpolator;
 
   private boolean mIsFlat;
+  private float mAccurateDeviceRotation;
+  private float mAlignmentRotationStart;
 
   /**
    * Constructor to be used to inflate the view
@@ -58,7 +65,10 @@ public class BullsEyeLevelView extends LevelView {
     mArcPaint.setStyle(Paint.Style.STROKE);
 
     mBackgroundInterpolator = new TimeInterpolator(getBackgroundFadeDuration());
+    mRotationInterpolator = new TimeInterpolator(getBackgroundFadeDuration());
     mArgbEvaluator = new ArgbEvaluator();
+    mFloatEvaluator = new FloatEvaluator();
+    mAnimationInterpolator = new AccelerateDecelerateInterpolator();
   }
 
   public void setConfig(Config config) {
@@ -99,6 +109,13 @@ public class BullsEyeLevelView extends LevelView {
   protected void onDataChange(float[] values) {
     mTilt = OrientationUtils.getDeviceTilt(values[2]);
     mRotation = OrientationUtils.getRotationDegrees(values[0], values[1]);
+
+    // Cache the device rotation when it is meaningfully tilted so we can make the 0 face the user
+    // when the device is in alignment.
+    if ((Math.abs(mTilt) > 10 && mConfig == Config.DOWN)
+        || (Math.abs(180 - mTilt) > 10 && mConfig == Config.UP)) {
+      mAccurateDeviceRotation = mRotation;
+    }
   }
 
   @Override
@@ -109,10 +126,41 @@ public class BullsEyeLevelView extends LevelView {
     if (flat != mIsFlat) {
       if (flat && !mIsFlat) {
         mBackgroundInterpolator.start();
+        mRotationInterpolator.start();
+        mAlignmentRotationStart = mRotation;
       } else if (!flat && mIsFlat) {
         mBackgroundInterpolator.reverse();
+        mRotationInterpolator.reset();
       }
       mIsFlat = flat;
+    }
+
+    float textRotation;
+
+    if (mIsFlat) {
+      float dstRotation;
+      if (mAccurateDeviceRotation > 45 && mAccurateDeviceRotation <= 135) {
+        dstRotation = 90;
+      } else if (mAccurateDeviceRotation > 135 && mAccurateDeviceRotation <= 225) {
+        dstRotation = 180;
+      } else if (mAccurateDeviceRotation > 225 && mAccurateDeviceRotation <= 315) {
+        dstRotation = 270;
+      } else {
+        dstRotation = 0;
+      }
+
+      if (dstRotation - mAlignmentRotationStart < -180 ) {
+        dstRotation += 360;
+      } else if (dstRotation - mAlignmentRotationStart > 180) {
+        mAlignmentRotationStart += 360;
+      }
+
+      textRotation = mFloatEvaluator.evaluate(
+          mAnimationInterpolator.getInterpolation(mRotationInterpolator.getProgress()),
+          mAlignmentRotationStart,
+          dstRotation);
+    } else {
+      textRotation = mRotation;
     }
 
     c.drawColor(
@@ -121,7 +169,7 @@ public class BullsEyeLevelView extends LevelView {
             getColorSet().getSecondaryColor(),
             getAlignmentColorSet().getSecondaryColor()));
 
-    c.saveLayer(null, null, Canvas.MATRIX_SAVE_FLAG);
+    c.save();
     c.rotate(mRotation, getCenterX(), getCenterY());
 
     mCirclePaint.setColor(
@@ -131,9 +179,13 @@ public class BullsEyeLevelView extends LevelView {
             getAlignmentColorSet().getPrimaryColor()));
     c.drawCircle(
         getCenterX(),
-        flat ? getCenterY() : getCircleY(mTilt),
+        getCircleY(mTilt),
         getCircleRadius(),
         mCirclePaint);
+    c.restore();
+
+    c.save();
+    c.rotate(textRotation, getCenterX(), getCenterY());
     String text = Math.round(mTilt) + "°";
     drawCenterText(c, text, mTextPaint);
     c.restore();
