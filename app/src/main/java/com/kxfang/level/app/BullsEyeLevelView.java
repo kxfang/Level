@@ -44,6 +44,7 @@ public class BullsEyeLevelView extends LevelView {
 
   private boolean mIsFlat;
   private float mAccurateDeviceRotation;
+  private float mAccurateDeviceRotationTilt;
   private float mAlignmentRotationStart;
 
   /**
@@ -112,9 +113,11 @@ public class BullsEyeLevelView extends LevelView {
 
     // Cache the device rotation when it is meaningfully tilted so we can make the 0 face the user
     // when the device is in alignment.
-    if ((Math.abs(mTilt) > 10 && mConfig == Config.DOWN)
-        || (Math.abs(180 - mTilt) > 10 && mConfig == Config.UP)) {
+    if ((mTilt > mAccurateDeviceRotationTilt || mTilt > 20)
+        && ((Math.abs(mTilt) > 10 && mConfig == Config.DOWN)
+        || (Math.abs(180 - mTilt) > 10 && mConfig == Config.UP))) {
       mAccurateDeviceRotation = mRotation;
+      mAccurateDeviceRotationTilt = mTilt;
     }
   }
 
