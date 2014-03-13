@@ -6,7 +6,6 @@ import android.hardware.SensorEventListener;
 
 import com.kxfang.level.app.filter.FloatFilter;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -14,16 +13,10 @@ import java.util.List;
  */
 public class FilteringSensorListener implements SensorEventListener {
 
-  public interface FilteredSensorEventListener {
-    public void onSensorChanged(SensorEvent sensorEvent, float[] filteredValues);
-    public void onAccuracyChanged(Sensor sensor, int i);
-  }
-
-  private FilteredSensorEventListener mListener;
+  private SensorEventListener mListener;
   private List<? extends FloatFilter> mFilters;
 
-  public FilteringSensorListener(FilteredSensorEventListener listener,
-                                 List<? extends FloatFilter> filters) {
+  public FilteringSensorListener(SensorEventListener listener, List<? extends FloatFilter> filters) {
     mListener = listener;
     mFilters = filters;
   }
@@ -34,11 +27,13 @@ public class FilteringSensorListener implements SensorEventListener {
 
   @Override
   public void onSensorChanged(SensorEvent sensorEvent) {
-    float[] filtered = Arrays.copyOf(sensorEvent.values, sensorEvent.values.length);
     for (FloatFilter filter : mFilters) {
-      filtered = filter.next(filtered);
+      float[] filtered = filter.next(sensorEvent.values);
+      for (int i = 0; i < sensorEvent.values.length; i++) {
+        sensorEvent.values[i] = filtered[i];
+      }
     }
-    mListener.onSensorChanged(sensorEvent, filtered);
+    mListener.onSensorChanged(sensorEvent);
   }
 
   @Override

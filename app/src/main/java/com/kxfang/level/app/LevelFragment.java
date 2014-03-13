@@ -41,20 +41,13 @@ public class LevelFragment extends Fragment {
 
   private DevicePosition mLevelViewPosition;
 
-  private boolean mShouldCalibrate = false;
-
   private float[] mSensorValues;
 
   // SensorEventListener
-  private FilteringSensorListener mSensorEventListener = new FilteringSensorListener(new FilteringSensorListener.FilteredSensorEventListener() {
+  private FilteringSensorListener mSensorEventListener = new FilteringSensorListener(new SensorEventListener() {
     @Override
-    public void onSensorChanged(SensorEvent sensorEvent, float[] filteredValues) {
-      if (mShouldCalibrate) {
-        doCalibrate();
-        mShouldCalibrate = false;
-        return;
-      }
-      mSensorValues = filteredValues;
+    public void onSensorChanged(SensorEvent sensorEvent) {
+      mSensorValues = sensorEvent.values;
       setPosition(
           OrientationUtils.getDeviceTilt(mSensorValues[2]),
           OrientationUtils.getRotationDegrees(mSensorValues[0], mSensorValues[1]));
@@ -80,7 +73,7 @@ public class LevelFragment extends Fragment {
 
     mLevelViewPosition.setRotation(rotation);
     mLevelViewPosition.setTilt(deviceTilt);
-//    mActiveLevelView.setPosition(mLevelViewPosition);
+    mActiveLevelView.setPosition(mLevelViewPosition);
   }
 
   private void setTilt(float deviceTilt) {
@@ -108,7 +101,7 @@ public class LevelFragment extends Fragment {
 
   private List<FloatFilter> getDefaultFilters(float[] calibrationValues) {
     List<FloatFilter> filters = new LinkedList<FloatFilter>();
-    filters.add(CalibrationFilter.withOffset(calibrationValues));
+    filters.add(new CalibrationFilter(calibrationValues));
     filters.add(new LowPassFilter(0.75f, 0.008f));
     return filters;
   }
@@ -128,13 +121,8 @@ public class LevelFragment extends Fragment {
   }
 
   public void calibrate() {
-    // First disable existing calibration
-    setFilterChain(getDefaultFilters(new float[3]));
-    mShouldCalibrate = true;
-  }
-
-  public void doCalibrate() {
     final float[] calibrationOffsets = Arrays.copyOf(mSensorValues, 3);
+    calibrationOffsets[2] -= SensorManager.GRAVITY_EARTH;
     CalibrationManager.getInstance().storeCalibration(getActivity(), calibrationOffsets);
 
     mSensorManager.unregisterListener(mSensorEventListener);
@@ -176,12 +164,10 @@ public class LevelFragment extends Fragment {
     });
   }
 
-  public static void logFloatValues(float[] values) {
-    String s = "";
+  private void logFloatValues(float[] values) {
     for (int i = 0; i < 3; i++) {
-       s += (char) (i + 'x') + ": " + values[i];
+        Log.d("TAG", "" + (char) (i + 'x') + ": " + values[i]);
     }
-    Log.d("TAG", s);
   }
 
   @Override
