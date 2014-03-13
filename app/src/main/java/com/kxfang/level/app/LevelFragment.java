@@ -6,7 +6,6 @@ import android.app.Fragment;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,13 +43,13 @@ public class LevelFragment extends Fragment {
   private float[] mSensorValues;
 
   // SensorEventListener
-  private FilteringSensorListener mSensorEventListener = new FilteringSensorListener(new SensorEventListener() {
+  private SensorFilter mSensorEventListener = new SensorFilter(new SensorFilter.Listener() {
     @Override
-    public void onSensorChanged(SensorEvent sensorEvent) {
+    public void onSensorChanged(SensorEvent sensorEvent, float[] filteredValues) {
       mSensorValues = sensorEvent.values;
       setPosition(
-          OrientationUtils.getDeviceTilt(mSensorValues[2]),
-          OrientationUtils.getRotationDegrees(mSensorValues[0], mSensorValues[1]));
+          OrientationUtils.getDeviceTilt(filteredValues[2]),
+          OrientationUtils.getRotationDegrees(filteredValues[0], filteredValues[1]));
     }
 
     @Override
