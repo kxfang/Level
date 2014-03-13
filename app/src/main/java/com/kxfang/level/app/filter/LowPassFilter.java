@@ -4,31 +4,31 @@ package com.kxfang.level.app.filter;
  * A low pass filter that conditionally applies given a threshold.
  */
 public class LowPassFilter implements FloatFilter {
-  private float mPrevious;
-  private boolean mPreviousSet;
+  private float[] mPrevious;
   private final float ALPHA;
   private final float THRESHOLD;
 
   public LowPassFilter(float alpha, float threshold) {
     ALPHA = alpha;
     THRESHOLD = threshold;
-    mPreviousSet = false;
-
+    mPrevious = null;
   }
 
   @Override
-  public float next(float next) {
-    if (Math.abs(next) > THRESHOLD) {
-      mPreviousSet = false;
+  public float[] next(float[] next) {
+    if (Math.abs(next[0]) > THRESHOLD && Math.abs(next[1]) > THRESHOLD) {
+      mPrevious = null;
       return next;
     }
-    if (!mPreviousSet) {
-      mPreviousSet = true;
+    if (mPrevious == null) {
+      mPrevious = new float[next.length];
       mPrevious = next;
       return next;
     }
-    float ret = mPrevious + THRESHOLD * (next - mPrevious);
-    mPrevious = ret;
-    return ret;
+    for (int i = 0; i < next.length; i++) {
+      next[i] = mPrevious[i] + ALPHA * (next[i] - mPrevious[i]);
+      mPrevious[i] = next[i];
+    }
+    return next;
   }
 }

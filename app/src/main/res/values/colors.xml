@@ -20,4 +20,6 @@
         <item>#FFFF4444</item>
         <item>#FFCC0000</item>
     </array>
+
+    <color name="menu_bg">#99FFFFFF</color>
 </resources>

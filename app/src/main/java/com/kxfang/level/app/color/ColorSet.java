@@ -24,6 +24,8 @@ public class ColorSet {
 
   private static final List<String> RANDOM_SET = Arrays.asList(BLUE, ORANGE, PURPLE, RED);
 
+  private static ColorSet sGlobalColorSet = null;
+
   private int mPrimaryColor, mSecondaryColor;
 
   private ColorSet(int primaryColor, int secondaryColor) {
@@ -60,6 +62,12 @@ public class ColorSet {
     return new ColorSet(colorSet.mPrimaryColor, colorSet.mSecondaryColor);
   }
 
+  public static ColorSet globalColorSet(Context context) {
+    if (sGlobalColorSet == null) {
+      sGlobalColorSet = randomColorSet(context);
+    }
+    return sGlobalColorSet;
+  }
 
   public static ColorSet randomColorSet(Context context) {
     return new ColorSet(context, RANDOM_SET.get(new Random().nextInt(RANDOM_SET.size())));

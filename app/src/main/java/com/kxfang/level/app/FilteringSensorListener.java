@@ -27,9 +27,10 @@ public class FilteringSensorListener implements SensorEventListener {
 
   @Override
   public void onSensorChanged(SensorEvent sensorEvent) {
-    for (int i = 0; i < sensorEvent.values.length; i++) {
-      for (FloatFilter filter : mFilters) {
-        sensorEvent.values[i] = filter.next(sensorEvent.values[i]);
+    for (FloatFilter filter : mFilters) {
+      float[] filtered = filter.next(sensorEvent.values);
+      for (int i = 0; i < sensorEvent.values.length; i++) {
+        sensorEvent.values[i] = filtered[i];
       }
     }
     mListener.onSensorChanged(sensorEvent);

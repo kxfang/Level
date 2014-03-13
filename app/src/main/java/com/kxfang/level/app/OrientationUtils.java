@@ -21,7 +21,11 @@ public final class OrientationUtils {
   }
 
   public static float getDeviceTilt(float z) {
-    return (float) Math.toDegrees(Math.acos(z / SensorManager.GRAVITY_EARTH));
+    float tilt = (float) Math.toDegrees(Math.acos(z / SensorManager.GRAVITY_EARTH));
+    if (Float.isNaN(tilt)) {
+      return 0;
+    }
+    return tilt;
   }
 
   public static boolean isLandscape(float rotation) {

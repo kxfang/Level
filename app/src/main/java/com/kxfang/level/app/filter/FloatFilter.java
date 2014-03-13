@@ -7,8 +7,8 @@ public interface FloatFilter {
 
   /**
    * Retrieve the filtered value based on some given value.
-   * @param next the value to process.
-   * @return the filtered value.
+   * @param next the values to process.
+   * @return the filtered values.
    */
-  public float next(float next);
+  public float[] next(float[] next);
 }
