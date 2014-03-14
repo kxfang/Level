@@ -3,6 +3,8 @@ package com.kxfang.level.app.filter;
 import android.util.Log;
 import android.view.ViewDebug;
 
+import com.kxfang.level.app.OrientationUtils;
+
 import Jama.Matrix;
 
 /**
@@ -16,6 +18,8 @@ public class CalibrationFilter implements FloatFilter {
   private Matrix mBasisX;
   private Matrix mBasisMatrix;
   private Matrix mBMatrix;
+  private Matrix mRotationAxis;
+  private Matrix mRotationMatrix;
 
   private final double[] UNIT_X = {1, 0, 0};
   private final double[] UNIT_Y = {0, 1, 0};
@@ -29,10 +33,36 @@ public class CalibrationFilter implements FloatFilter {
     mBasisZ = mOffsets.copy();
     normalize(mBasisZ);
 
-    mBasisX = project(new Matrix(UNIT_X, UNIT_X.length), mBasisZ);
+    double[] rotationCoordinates = { offsets[1], -1 * offsets[0], 0 };
+    mRotationAxis = new Matrix(rotationCoordinates, 3);
+    normalize(mRotationAxis);
+
+    double rotationTheta = -1 * Math.toRadians(OrientationUtils.getDeviceTilt(offsets[2]));
+    double cosTheta = Math.cos(rotationTheta);
+    double nCosTheta = 1 - cosTheta;
+    double sinTheta = Math.sin(rotationTheta);
+    double ux = mRotationAxis.get(0, 0);
+    double uy = mRotationAxis.get(1, 0);
+    double uz = mRotationAxis.get(2, 0);
+    double[][] rotationMatrix = {
+        { cosTheta + ux * ux * nCosTheta, ux * uy * nCosTheta - uz * sinTheta, ux * uz * nCosTheta + uy * sinTheta },
+        { uy * ux * nCosTheta + uz * sinTheta, cosTheta + uy * uy * nCosTheta, uy * uz * nCosTheta - ux * sinTheta },
+        { uz * ux * nCosTheta - uy * sinTheta, uz * uy * nCosTheta + ux * sinTheta, cosTheta + uz * uz * nCosTheta }
+    };
+
+    mRotationMatrix = new Matrix(rotationMatrix);
+    Log.d("TAT", "rotation mat");
+    log(mRotationAxis);
+    log(mRotationMatrix);
+
+    mBasisX = mRotationMatrix.times(new Matrix(UNIT_X, UNIT_X.length));
     normalize(mBasisX);
-    mBasisY = project(new Matrix(UNIT_Y, UNIT_Y.length), mBasisZ);
+    mBasisY = mRotationMatrix.times(new Matrix(UNIT_Y, UNIT_Y.length));
     normalize(mBasisY);
+
+    Log.d("TAT", "" + dotProduct(mBasisX, mBasisZ));
+    Log.d("TAT", "" + dotProduct(mBasisY, mBasisZ));
+    Log.d("TAT", "" + dotProduct(mBasisX, mBasisY));
 
     double[][] basisArray = {
         mBasisX.getColumnPackedCopy(),
@@ -111,6 +141,9 @@ public class CalibrationFilter implements FloatFilter {
     }
 
     Matrix x = mBasisMatrix.solve(mBMatrix);
+
+//    log(mBasisMatrix.times(x));
+//    log(mBMatrix);
 
     for (int i = 0; i < x.getRowDimension(); i++) {
       next[i] = (float) x.get(i, 0);
