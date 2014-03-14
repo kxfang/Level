@@ -47,6 +47,7 @@ public class LevelFragment extends Fragment {
     @Override
     public void onSensorChanged(SensorEvent sensorEvent, float[] filteredValues) {
       mSensorValues = sensorEvent.values;
+      SensorDebugFragment.get().setData(sensorEvent.values, filteredValues);
       setPosition(
           OrientationUtils.getDeviceTilt(filteredValues[2]),
           OrientationUtils.getRotationDegrees(filteredValues[0], filteredValues[1]));
@@ -100,7 +101,7 @@ public class LevelFragment extends Fragment {
 
   private List<FloatFilter> getDefaultFilters(float[] calibrationValues) {
     List<FloatFilter> filters = new LinkedList<FloatFilter>();
-    filters.add(new CalibrationFilter(calibrationValues));
+    filters.add(CalibrationFilter.withOffsets(calibrationValues));
     filters.add(new LowPassFilter(0.75f, 0.008f));
     return filters;
   }
@@ -121,7 +122,6 @@ public class LevelFragment extends Fragment {
 
   public void calibrate() {
     final float[] calibrationOffsets = Arrays.copyOf(mSensorValues, 3);
-    calibrationOffsets[2] -= SensorManager.GRAVITY_EARTH;
     CalibrationManager.getInstance().storeCalibration(getActivity(), calibrationOffsets);
 
     mSensorManager.unregisterListener(mSensorEventListener);
