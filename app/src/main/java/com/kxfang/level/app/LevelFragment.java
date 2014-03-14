@@ -47,7 +47,7 @@ public class LevelFragment extends Fragment {
     @Override
     public void onSensorChanged(SensorEvent sensorEvent, float[] filteredValues) {
       mSensorValues = sensorEvent.values;
-      SensorDebugFragment.get().setData(sensorEvent.values, filteredValues);
+//      SensorDebugFragment.get().setData(sensorEvent.values, filteredValues);
       setPosition(
           OrientationUtils.getDeviceTilt(filteredValues[2]),
           OrientationUtils.getRotationDegrees(filteredValues[0], filteredValues[1]));
