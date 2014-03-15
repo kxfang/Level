@@ -3,7 +3,7 @@
 
     <string name="app_name">Level</string>
     <string name="hello_world">Hello world!</string>
-    <string name="calibration">Place your device on a flat surface and press Calibrate</string>
+    <string name="calibration">Place your device on a flat horizontal surface and press Calibrate</string>
     <string name="calibrate_button">Calibrate</string>
 
 </resources>

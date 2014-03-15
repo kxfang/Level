@@ -4,5 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="ui_component_margin">10dp</dimen>
+    <dimen name="ui_component_padding">10dp</dimen>
 
-    </resources>
+    <dimen name="text_size">18dp</dimen>
+</resources>

@@ -16,14 +16,18 @@
         android:layout_marginBottom="20dp"
         android:textColor="@android:color/white"
         android:text="@string/calibration"
-        android:textSize="18dp"
+        android:textSize="@dimen/text_size"
         android:fontFamily="sans-serif-light" />
 
     <Button
         android:id="@+id/button_calibration"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="@dimen/ui_component_margin"
-        android:text="@string/calibrate_button" />
+        android:background="@drawable/button"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_size"
+        android:text="@string/calibrate_button"
+        android:gravity="center_vertical"/>
 
 </com.kxfang.level.app.SlideableLinearLayout>
