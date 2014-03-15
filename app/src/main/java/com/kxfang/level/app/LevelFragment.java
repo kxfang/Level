@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.kxfang.level.app.color.ColorSet;
 import com.kxfang.level.app.filter.CalibrationFilter;
@@ -35,8 +36,6 @@ public class LevelFragment extends Fragment {
   private BullsEyeLevelView mBullsEyeLevelView;
   private HorizonLevelView mHorizonLevelView;
   private LevelView mActiveLevelView;
-
-  private ShakeDetector mShakeDetector;
 
   private DevicePosition mLevelViewPosition;
 
@@ -96,7 +95,6 @@ public class LevelFragment extends Fragment {
         mSensorEventListener,
         mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY),
         SensorManager.SENSOR_DELAY_FASTEST);
-    mShakeDetector.start(mSensorManager);
   }
 
   private List<FloatFilter> getDefaultFilters(float[] calibrationValues) {
@@ -108,7 +106,6 @@ public class LevelFragment extends Fragment {
 
   private void unregisterListeners() {
     mSensorManager.unregisterListener(mSensorEventListener);
-    mShakeDetector.stop();
   }
 
   // Public methods
@@ -126,6 +123,8 @@ public class LevelFragment extends Fragment {
 
     mSensorManager.unregisterListener(mSensorEventListener);
     ObjectAnimator animator = ObjectAnimator.ofFloat(this, "tilt", mLevelViewPosition.getTilt(), 0);
+    animator.setDuration(1000);
+    animator.setInterpolator(new AccelerateDecelerateInterpolator());
     animator.addListener(new Animator.AnimatorListener() {
       @Override
       public void onAnimationStart(Animator animator) {
@@ -154,13 +153,11 @@ public class LevelFragment extends Fragment {
 
     mLevelViewPosition = new DevicePosition(0, 0);
     mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
-    mShakeDetector = new ShakeDetector(new ShakeDetector.Listener() {
-      @Override
-      public void hearShake() {
-        CalibrationManager.getInstance().clearCalibration(getActivity());
-        setFilterChain(getDefaultFilters(new float[3]));
-      }
-    });
+  }
+
+  public void clearCalibration() {
+    CalibrationManager.getInstance().clearCalibration(getActivity());
+    setFilterChain(getDefaultFilters(new float[3]));
   }
 
   private void logFloatValues(float[] values) {

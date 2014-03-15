@@ -2,7 +2,7 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo">
-        <!-- Customize your theme here. -->
+        <item name="android:layout_margin">@dimen/ui_component_margin</item>
     </style>
 
 </resources>

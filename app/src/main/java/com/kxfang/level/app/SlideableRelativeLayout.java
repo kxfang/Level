@@ -4,15 +4,16 @@ import android.animation.FloatEvaluator;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 /**
- * A LinearLayout that enables sliding in from off-screen.
+ * A RelativeLayout that enables sliding in from off-screen.
  */
-public class SlideableLinearLayout extends LinearLayout {
+public class SlideableRelativeLayout extends RelativeLayout {
 
   private FloatEvaluator mFloatEvaluator;
 
-  public SlideableLinearLayout(Context context, AttributeSet attrs) {
+  public SlideableRelativeLayout(Context context, AttributeSet attrs) {
     super(context, attrs);
     mFloatEvaluator = new FloatEvaluator();
   }

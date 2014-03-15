@@ -6,5 +6,5 @@
     <dimen name="ui_component_margin">10dp</dimen>
     <dimen name="ui_component_padding">10dp</dimen>
 
-    <dimen name="text_size">18dp</dimen>
+    <dimen name="text_size">16dp</dimen>
 </resources>
