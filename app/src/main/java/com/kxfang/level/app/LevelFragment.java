@@ -18,7 +18,6 @@ import com.kxfang.level.app.color.ColorSet;
 import com.kxfang.level.app.filter.CalibrationFilter;
 import com.kxfang.level.app.filter.FloatFilter;
 import com.kxfang.level.app.filter.LowPassFilter;
-import com.squareup.seismic.ShakeDetector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -119,7 +118,7 @@ public class LevelFragment extends Fragment {
 
   public void calibrate() {
     final float[] calibrationOffsets = Arrays.copyOf(mSensorValues, 3);
-    CalibrationManager.getInstance().storeCalibration(getActivity(), calibrationOffsets);
+    CalibrationManager.getInstance().storeFlatCalibration(getActivity(), calibrationOffsets);
 
     mSensorManager.unregisterListener(mSensorEventListener);
     ObjectAnimator animator = ObjectAnimator.ofFloat(this, "tilt", mLevelViewPosition.getTilt(), 0);
@@ -185,7 +184,7 @@ public class LevelFragment extends Fragment {
   public void onResume() {
     super.onResume();
     float[] calibration = new float[3];
-    CalibrationManager.getInstance().loadCalibration(getActivity(), calibration);
+    CalibrationManager.getInstance().loadFlatCalibration(getActivity(), calibration);
     setFilterChain(getDefaultFilters(calibration));
     registerListeners();
   }

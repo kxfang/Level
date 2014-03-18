@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
  */
 public class CalibrationManager {
   private static final String PREFERENCES_FILENAME = "calibration.prefs";
+  private static final String FLAT_PREFIX = "flat_";
   private static final CalibrationManager INSTANCE = new CalibrationManager();
 
   private CalibrationManager() { }
@@ -16,18 +17,18 @@ public class CalibrationManager {
     return INSTANCE;
   }
 
-  public void storeCalibration(Context context, float[] values) {
+  public void storeFlatCalibration(Context context, float[] values) {
     SharedPreferences.Editor prefs = context.getSharedPreferences(PREFERENCES_FILENAME, 0).edit();
     for (int i = 0; i < values.length; i++) {
-      prefs.putFloat("" + i, values[i]);
+      prefs.putFloat(FLAT_PREFIX + i, values[i]);
     }
     prefs.commit();
   }
 
-  public void loadCalibration(Context context, float[] values) {
+  public void loadFlatCalibration(Context context, float[] values) {
     SharedPreferences prefs = context.getSharedPreferences(PREFERENCES_FILENAME, 0);
     for (int i = 0; i < values.length; i++) {
-      values[i] = prefs.getFloat("" + i, 0);
+      values[i] = prefs.getFloat(FLAT_PREFIX + i, 0);
     }
   }
 
