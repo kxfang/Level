@@ -71,4 +71,8 @@ public final class OrientationManager {
   public static boolean isLandscape(float rotation) {
     return ((rotation > 45 && rotation < 135) || (rotation > 225 && rotation < 315));
   }
-}
+
+  public static float getHorizonOffset(float rotation) {
+    return -1 * ((rotation + 45) % 90 - 45);
+  }
+ }

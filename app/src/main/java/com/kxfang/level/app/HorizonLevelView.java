@@ -97,8 +97,8 @@ public class HorizonLevelView extends LevelView {
         OrientationManager.isLandscape(mRotation));
   }
 
-  private float getDisplayRotation(float mRotation) {
-    return -1 * ((mRotation + 45) % 90 - 45);
+  private float getDisplayRotation(float rotation) {
+    return OrientationManager.getHorizonOffset(rotation);
   }
 
   private boolean isLevel(float rotation) {

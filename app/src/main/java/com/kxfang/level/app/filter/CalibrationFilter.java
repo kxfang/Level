@@ -11,7 +11,7 @@ import Jama.Matrix;
  */
 public class CalibrationFilter implements FloatFilter {
 
-  private Matrix mOffsets;
+  private Matrix mFlatOffsets;
   private Matrix mBasisZ;
   private Matrix mBasisY;
   private Matrix mBasisX;
@@ -23,20 +23,20 @@ public class CalibrationFilter implements FloatFilter {
   private final double[] UNIT_X = {1, 0, 0};
   private final double[] UNIT_Y = {0, 1, 0};
 
-  private CalibrationFilter(float[] offsets) {
-    double[] offsetsCopy = new double[offsets.length];
-    for (int i = 0; i < offsets.length; i++) {
-      offsetsCopy[i] = offsets[i];
+  private CalibrationFilter(float[] flatOffsets) {
+    double[] offsetsCopy = new double[flatOffsets.length];
+    for (int i = 0; i < flatOffsets.length; i++) {
+      offsetsCopy[i] = flatOffsets[i];
     }
-    mOffsets = new Matrix(offsetsCopy, offsets.length);
-    mBasisZ = mOffsets.copy();
+    mFlatOffsets = new Matrix(offsetsCopy, flatOffsets.length);
+    mBasisZ = mFlatOffsets.copy();
     normalize(mBasisZ);
 
-    double[] rotationCoordinates = { offsets[1], -1 * offsets[0], 0 };
+    double[] rotationCoordinates = { flatOffsets[1], -1 * flatOffsets[0], 0 };
     mRotationAxis = new Matrix(rotationCoordinates, 3);
     normalize(mRotationAxis);
 
-    double rotationTheta = -1 * Math.toRadians(OrientationManager.getDeviceTilt(offsets[2]));
+    double rotationTheta = -1 * Math.toRadians(OrientationManager.getDeviceTilt(flatOffsets[2]));
     double cosTheta = Math.cos(rotationTheta);
     double nCosTheta = 1 - cosTheta;
     double sinTheta = Math.sin(rotationTheta);

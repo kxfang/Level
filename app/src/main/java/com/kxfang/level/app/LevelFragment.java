@@ -39,6 +39,7 @@ public class LevelFragment extends Fragment {
   private DevicePosition mLevelViewPosition;
 
   private float[] mSensorValues;
+  private float mRotationCalibrationOffset;
 
   // SensorEventListener
   private SensorFilter mSensorEventListener = new SensorFilter(new SensorFilter.Listener() {
@@ -70,13 +71,21 @@ public class LevelFragment extends Fragment {
       setActiveLevelView(mBullsEyeLevelView);
     }
 
-    mLevelViewPosition.setRotation(rotation);
+    if (mActiveLevelView == mHorizonLevelView) {
+      mLevelViewPosition.setRotation(rotation + mRotationCalibrationOffset);
+    } else {
+      mLevelViewPosition.setRotation(rotation);
+    }
     mLevelViewPosition.setTilt(deviceTilt);
     mActiveLevelView.setPosition(mLevelViewPosition);
   }
 
   private void setTilt(float deviceTilt) {
     setPosition(deviceTilt, mLevelViewPosition.getRotation());
+  }
+
+  private void setRotation(float rotation) {
+    setPosition(mLevelViewPosition.getTilt(), rotation);
   }
 
   private void setActiveLevelView(LevelView levelView) {
@@ -118,11 +127,42 @@ public class LevelFragment extends Fragment {
   }
 
   public void calibrate() {
+    final boolean isFlatCalibration = mActiveLevelView == mBullsEyeLevelView;
     final float[] calibrationOffsets = Arrays.copyOf(mSensorValues, 3);
-    CalibrationManager.getInstance().storeFlatCalibration(getActivity(), calibrationOffsets);
+    final float horizontalRotationOffset;
+    float deviceRotation =
+        OrientationManager.getRotationDegrees(calibrationOffsets[0], calibrationOffsets[1]);
+    ObjectAnimator animator;
+    if (isFlatCalibration) {
+      CalibrationManager.getInstance().storeFlatCalibration(getActivity(), calibrationOffsets);
+      animator = ObjectAnimator.ofFloat(this, "tilt", mLevelViewPosition.getTilt(), 0);
+      horizontalRotationOffset = mRotationCalibrationOffset;
+    } else {
+      horizontalRotationOffset = OrientationManager.getHorizonOffset(deviceRotation);
+      Log.d("CALI", "" + horizontalRotationOffset);
+      CalibrationManager.getInstance().storeHorizontalCalibration(
+          getActivity(), horizontalRotationOffset);
+
+      float animateSrc;
+      float animateDst;
+//      if (horizontalRotationOffset > 0) {
+      mRotationCalibrationOffset = 0;
+        animateSrc = mLevelViewPosition.getRotation();
+      Log.d("TAG", animateSrc + "");
+        animateDst = deviceRotation + horizontalRotationOffset;
+      Log.d("TAG", animateDst + "");
+//      } else {
+//        animateSrc = mLevelViewPosition.getRotation() + horizontalRotationOffset;
+//        animateDst = mLevelViewPosition.getRotation();
+//      }
+      animator = ObjectAnimator.ofFloat(
+          this,
+          "rotation",
+          animateSrc,
+          animateDst);
+    }
 
     mSensorManager.unregisterListener(mSensorEventListener);
-    ObjectAnimator animator = ObjectAnimator.ofFloat(this, "tilt", mLevelViewPosition.getTilt(), 0);
     animator.setDuration(1000);
     animator.setInterpolator(new AccelerateDecelerateInterpolator());
     animator.addListener(new Animator.AnimatorListener() {
@@ -132,7 +172,11 @@ public class LevelFragment extends Fragment {
 
       @Override
       public void onAnimationEnd(Animator animator) {
-        setFilterChain(getDefaultFilters(calibrationOffsets));
+        if (isFlatCalibration) {
+          setFilterChain(getDefaultFilters(calibrationOffsets));
+        } else {
+          mRotationCalibrationOffset = horizontalRotationOffset;
+        }
         registerListeners();
       }
 
@@ -158,6 +202,7 @@ public class LevelFragment extends Fragment {
   public void clearCalibration() {
     CalibrationManager.getInstance().clearCalibration(getActivity());
     setFilterChain(getDefaultFilters(new float[3]));
+    mRotationCalibrationOffset = 0;
   }
 
   private void logFloatValues(float[] values) {
@@ -187,6 +232,8 @@ public class LevelFragment extends Fragment {
     float[] calibration = new float[3];
     CalibrationManager.getInstance().loadFlatCalibration(getActivity(), calibration);
     setFilterChain(getDefaultFilters(calibration));
+    mRotationCalibrationOffset =
+        CalibrationManager.getInstance().loadHorizontalCalibration(getActivity());
     registerListeners();
   }
 
@@ -194,5 +241,6 @@ public class LevelFragment extends Fragment {
   public void onPause() {
     super.onPause();
     unregisterListeners();
+    CalibrationManager.getInstance().commit(getActivity());
   }
 }

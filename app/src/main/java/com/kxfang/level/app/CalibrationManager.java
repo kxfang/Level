@@ -3,16 +3,23 @@ package com.kxfang.level.app;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Manages the calibration of the sensor.
  */
 public class CalibrationManager {
   private static final String PREFERENCES_FILENAME = "calibration.prefs";
   private static final String FLAT_PREFIX = "flat_";
-  private static final String HORIZONTAL_PREFIX = "horizon_"
+  private static final String HORIZONTAL_PREFIX = "horizon_";
   private static final CalibrationManager INSTANCE = new CalibrationManager();
 
-  private CalibrationManager() { }
+  private Map<String, Float> mCalibrationPrefsMap;
+
+  private CalibrationManager() {
+    mCalibrationPrefsMap = new HashMap<String, Float>();
+  }
 
   public static CalibrationManager getInstance() {
     return INSTANCE;
@@ -20,11 +27,9 @@ public class CalibrationManager {
 
   private void storeCalibration(Context context, float[] values, boolean horizontal) {
     String prefix = horizontal ? HORIZONTAL_PREFIX : FLAT_PREFIX;
-    SharedPreferences.Editor prefs = context.getSharedPreferences(PREFERENCES_FILENAME, 0).edit();
     for (int i = 0; i < values.length; i++) {
-      prefs.putFloat(prefix + i, values[i]);
+      mCalibrationPrefsMap.put(prefix + i, values[i]);
     }
-    prefs.commit();
   }
 
   private void loadCalibration(Context context, float[] values, boolean horizontal) {
@@ -35,12 +40,15 @@ public class CalibrationManager {
     }
   }
 
-  public void storeHorizontalCalibration(Context context, float[] values) {
-    storeCalibration(context, values, true);
+  public void storeHorizontalCalibration(Context context, float value) {
+    float[] v = { value };
+    storeCalibration(context, v, true);
   }
 
-  public void loadHorizontalCalibration(Context context, float[] values) {
-    loadCalibration(context, values, true);
+  public float loadHorizontalCalibration(Context context) {
+    float[] v = new float[1];
+    loadCalibration(context, v, true);
+    return v[0];
   }
 
   public void storeFlatCalibration(Context context, float[] values) {
@@ -52,11 +60,20 @@ public class CalibrationManager {
   }
 
   public void clearCalibration(Context context) {
+    mCalibrationPrefsMap.clear();
     context
         .getSharedPreferences(PREFERENCES_FILENAME, 0)
         .edit()
         .clear()
         .commit();
+  }
+
+  public void commit(Context context) {
+    SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCES_FILENAME, 0).edit();
+    for (Map.Entry<String, Float> entry : mCalibrationPrefsMap.entrySet()) {
+      editor.putFloat(entry.getKey(), entry.getValue());
+    }
+    editor.commit();
   }
 }
 
