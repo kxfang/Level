@@ -6,6 +6,7 @@ import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.view.OrientationEventListener;
 import android.view.View;
 import android.widget.Button;
 
@@ -21,6 +22,10 @@ public class MainActivity extends Activity {
 
   private ShakeDetector mShakeDetector;
 
+  private SensorManager mSensorManager;
+
+  private OrientationEventListener mOrientationEventListener;
+
   private boolean mShowConfirmation;
 
   @Override
@@ -29,6 +34,7 @@ public class MainActivity extends Activity {
     setContentView(R.layout.activity_main);
 
     mLevelFragment = (LevelFragment) getFragmentManager().findFragmentById(R.id.level_fragment);
+    mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
     mConfirmationFragment = new SlidingBannerFragment(
         R.drawable.ic_action_done,
@@ -106,7 +112,7 @@ public class MainActivity extends Activity {
   @Override
   protected void onResume() {
     super.onResume();
-    mShakeDetector.start((SensorManager) getSystemService(SENSOR_SERVICE));
+    mShakeDetector.start(mSensorManager);
   }
 
   @Override

@@ -3,13 +3,12 @@ package com.kxfang.level.app;
 import android.animation.ArgbEvaluator;
 import android.animation.FloatEvaluator;
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
+import android.view.Surface;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.kxfang.level.app.color.ColorSet;
@@ -47,8 +46,6 @@ public class BullsEyeLevelView extends LevelView {
   private AccelerateDecelerateInterpolator mAnimationInterpolator;
 
   private boolean mIsFlat;
-  private float mAccurateDeviceRotation;
-  private float mAccurateDeviceRotationTilt;
   private float mAlignmentRotationStart;
 
   /**
@@ -120,15 +117,6 @@ public class BullsEyeLevelView extends LevelView {
   protected void onDataChange(DevicePosition position) {
     mTilt = position.getTilt();
     mRotation = position.getRotation();
-
-    // Cache the device rotation when it is meaningfully tilted so we can make the 0 face the user
-    // when the device is in alignment.
-    if ((mTilt > mAccurateDeviceRotationTilt || mTilt > 20)
-        && ((Math.abs(mTilt) > 10 && mConfig == Config.DOWN)
-        || (Math.abs(180 - mTilt) > 10 && mConfig == Config.UP))) {
-      mAccurateDeviceRotation = mRotation;
-      mAccurateDeviceRotationTilt = mTilt;
-    }
   }
 
   @Override
@@ -152,14 +140,19 @@ public class BullsEyeLevelView extends LevelView {
 
     if (mIsFlat) {
       float dstRotation;
-      if (mAccurateDeviceRotation > 45 && mAccurateDeviceRotation <= 135) {
-        dstRotation = 90;
-      } else if (mAccurateDeviceRotation > 135 && mAccurateDeviceRotation <= 225) {
-        dstRotation = 180;
-      } else if (mAccurateDeviceRotation > 225 && mAccurateDeviceRotation <= 315) {
-        dstRotation = 270;
-      } else {
-        dstRotation = 0;
+
+      switch (OrientationManager.getInstance().getCurrentOrientation()) {
+        case Surface.ROTATION_90:
+          dstRotation = 90;
+          break;
+        case Surface.ROTATION_180:
+          dstRotation = 180;
+          break;
+        case Surface.ROTATION_270:
+          dstRotation = 270;
+          break;
+        default:
+          dstRotation = 0;
       }
 
       if (dstRotation - mAlignmentRotationStart < -180 ) {
@@ -212,7 +205,7 @@ public class BullsEyeLevelView extends LevelView {
             mLineIndicatorTransformEndTilt,
             0,
             getHorizonIndicatorLength()),
-        OrientationUtils.isLandscape(mRotation));
+        OrientationManager.isLandscape(mRotation));
   }
 
   private void updatePaintColors() {

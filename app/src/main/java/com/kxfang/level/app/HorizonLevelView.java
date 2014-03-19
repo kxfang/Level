@@ -94,7 +94,7 @@ public class HorizonLevelView extends LevelView {
             LINE_INDICATOR_TRANSFORM_END,
             getHorizonIndicatorLength(),
             0),
-        OrientationUtils.isLandscape(mRotation));
+        OrientationManager.isLandscape(mRotation));
   }
 
   private float getDisplayRotation(float mRotation) {

@@ -18,7 +18,6 @@ import com.kxfang.level.app.color.ColorSet;
 import com.kxfang.level.app.filter.CalibrationFilter;
 import com.kxfang.level.app.filter.FloatFilter;
 import com.kxfang.level.app.filter.LowPassFilter;
-import com.squareup.seismic.ShakeDetector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,8 +47,8 @@ public class LevelFragment extends Fragment {
       mSensorValues = sensorEvent.values;
 //      SensorDebugFragment.get().setData(sensorEvent.values, filteredValues);
       setPosition(
-          OrientationUtils.getDeviceTilt(filteredValues[2]),
-          OrientationUtils.getRotationDegrees(filteredValues[0], filteredValues[1]));
+          OrientationManager.getDeviceTilt(filteredValues[2]),
+          OrientationManager.getRotationDegrees(filteredValues[0], filteredValues[1]));
     }
 
     @Override
@@ -59,6 +58,7 @@ public class LevelFragment extends Fragment {
   }, new ArrayList<FloatFilter>());
 
   private void setPosition(float deviceTilt, float rotation) {
+    OrientationManager.getInstance().setCurrentPosition(deviceTilt, rotation);
     if (deviceTilt > 44.5f
         && deviceTilt < 134.5f) {
       setActiveLevelView(mHorizonLevelView);
