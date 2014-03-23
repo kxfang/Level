@@ -60,7 +60,7 @@ public class SlidingBannerFragment extends Fragment {
     if (mButtonText == null) {
       mButton.setVisibility(View.GONE);
     } else {
-      mButton.setText(mButtonText);
+//      mButton.setText(mButtonText);
     }
     if (mDrawableId == 0) {
       mImageView.setVisibility(View.GONE);
