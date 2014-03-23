@@ -22,13 +22,15 @@ public class SlideableRelativeLayout extends RelativeLayout {
   protected void onSizeChanged (int w, int h, int oldw, int oldh) {
     super.onSizeChanged(w, h, oldw, oldh);
     setY(-1 * h);
+    setAlpha(0);
   }
 
   public float getSlideInFractionY() {
-    return 1 - getY() / getHeight();
+    return 1 - getY() / (getHeight() + 50);
   }
 
   public void setSlideInFractionY(float fractionY) {
-    setY(mFloatEvaluator.evaluate(fractionY, 0, getHeight()));
+    setY(mFloatEvaluator.evaluate(fractionY, 50, getHeight()));
+    setAlpha(fractionY + 1);
   }
 }

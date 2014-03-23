@@ -48,8 +48,6 @@ public class SlidingBannerFragment extends Fragment {
   @Override
   public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-    view.findViewById(R.id.menu_linear_layout).setBackgroundColor(
-        ColorSet.globalColorSet(getActivity()).getPrimaryColor());
 
     mButton = (Button) view.findViewById(R.id.button_banner);
     mTextView = (TextView) view.findViewById(R.id.text_banner);
