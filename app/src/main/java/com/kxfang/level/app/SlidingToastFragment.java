@@ -67,6 +67,9 @@ public class SlidingToastFragment extends Fragment {
 
   @Override
   public Animator onCreateAnimator(int transit, boolean enter, int nextAnim) {
+    if (nextAnim == 0) {
+      return super.onCreateAnimator(transit, enter, nextAnim);
+    }
     Animator animator = AnimatorInflater.loadAnimator(getActivity(), nextAnim);
     if (nextAnim == R.animator.slide_out && animator != null) {
       animator.addListener(new AnimatorListenerAdapter() {
@@ -79,6 +82,15 @@ public class SlidingToastFragment extends Fragment {
       });
     } else if (nextAnim == R.animator.fade_in) {
       mFrameLayout.setSlideIn(false);
+    }
+    if (animator != null
+        && (nextAnim == R.animator.fade_out || nextAnim == R.animator.slide_out)) {
+      animator.addListener(new AnimatorListenerAdapter() {
+        @Override
+        public void onAnimationEnd(Animator animation) {
+          mShowing = false;
+        }
+      });
     }
     return animator;
   }
@@ -106,7 +118,9 @@ public class SlidingToastFragment extends Fragment {
       long autoHideMillis,
       int animatorId) {
     FragmentTransaction transaction = manager.beginTransaction();
-    transaction.setCustomAnimations(animatorId, 0, 0, 0);
+    if (animatorId != 0) {
+      transaction.setCustomAnimations(animatorId, 0, 0, 0);
+    }
     transaction.add(layoutParent, this);
     transaction.commit();
     mShowing = true;
@@ -124,13 +138,20 @@ public class SlidingToastFragment extends Fragment {
     removeWithAnimation(manager, R.animator.slide_out);
   }
 
+  public void removeToast() {
+    removeWithAnimation(getFragmentManager(), 0);
+  }
+
   private void removeWithAnimation(FragmentManager manager, int animatorId) {
     mHandler.removeCallbacks(mAutoHideRunnable);
     FragmentTransaction transaction = manager.beginTransaction();
-    transaction.setCustomAnimations(0, animatorId, 0, 0);
+    if (animatorId != 0) {
+      transaction.setCustomAnimations(0, animatorId, 0, 0);
+    } else {
+      mShowing = false;
+    }
     transaction.remove(this);
     transaction.commit();
-    mShowing = false;
   }
 
   public void fadeOut(FragmentManager manager) {

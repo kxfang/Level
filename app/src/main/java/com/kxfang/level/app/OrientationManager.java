@@ -1,6 +1,5 @@
 package com.kxfang.level.app;
 
-import android.content.pm.ActivityInfo;
 import android.hardware.SensorManager;
 import android.view.Surface;
 

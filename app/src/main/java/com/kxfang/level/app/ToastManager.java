@@ -1,8 +1,6 @@
 package com.kxfang.level.app;
 
-import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,10 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Queue;
 
 /**
  * Singleton for managing app-wide custom toasts.
@@ -42,6 +38,7 @@ public class ToastManager {
     private int mLayoutParent;
     private long mAutoHideMillis;
     private SlidingToastFragment mToastFragment;
+    private long mDisplayTime;
 
     private ToastState(
         int id,
@@ -55,6 +52,7 @@ public class ToastManager {
       mLayoutParent = layoutParent;
       mAutoHideMillis = autoHideMillis;
       mToastFragment = new SlidingToastFragment(mListener);
+      mDisplayTime = -1;
     }
 
     private ToastState(ToastState other) {
@@ -62,8 +60,11 @@ public class ToastManager {
       mFragmentManager = other.mFragmentManager;
       mListener = other.mListener;
       mLayoutParent = other.mLayoutParent;
-      mAutoHideMillis = other.mAutoHideMillis;
       mToastFragment = new SlidingToastFragment(mListener);
+      mDisplayTime = other.mDisplayTime;
+      if (other.mAutoHideMillis != 0) {
+        mAutoHideMillis = other.mAutoHideMillis - (System.currentTimeMillis() - mDisplayTime);
+      }
     }
 
     public int getId() {
@@ -88,6 +89,18 @@ public class ToastManager {
 
     public long getAutoHide() {
       return mAutoHideMillis;
+    }
+
+    public long getDisplayTime() {
+      return mDisplayTime;
+    }
+
+    public void setDisplayTime(long displayTime) {
+      mDisplayTime = displayTime;
+    }
+
+    public boolean hasShown() {
+      return !mToastFragment.isShowing() && mDisplayTime != -1;
     }
   }
 
@@ -116,13 +129,19 @@ public class ToastManager {
     @Override
     public void onOrientationChanged(int oldOrientation, int newOrientation) {
       if (mCurrentToast != null && mCurrentToast.getToastFragment().isShowing()) {
-        ToastState newTs = new ToastState(mCurrentToast);
-        mToastQueue.add(0, newTs);
-        SlidingToastFragment currentToastFragment = mCurrentToast.getToastFragment();
-        currentToastFragment.setSlideOutListener(null);
-        currentToastFragment.fadeOut(mCurrentToast.getFragmentManager());
-        mCurrentToast = null;
-        showNextToast(false);
+        long now = System.currentTimeMillis();
+        if (mCurrentToast.getAutoHide() != 0
+            && (now - mCurrentToast.getDisplayTime() > mCurrentToast.getAutoHide() - 1000)) {
+          hideToast(mCurrentToast.getId());
+        } else {
+          ToastState newTs = new ToastState(mCurrentToast);
+          mToastQueue.add(0, newTs);
+          SlidingToastFragment currentToastFragment = mCurrentToast.getToastFragment();
+          currentToastFragment.setSlideOutListener(null);
+          currentToastFragment.fadeOut(mCurrentToast.getFragmentManager());
+          mCurrentToast = null;
+          showNextToast(false);
+        }
       }
     }
   }
@@ -167,9 +186,21 @@ public class ToastManager {
     return ts.getId();
   }
 
+  public void clearToasts() {
+    mToastQueue.clear();
+    if (mCurrentToast != null) {
+      mCurrentToast.getToastFragment().removeToast();
+      mCurrentToast = null;
+    }
+  }
+
   public boolean hideToast(int toastId) {
     if (mCurrentToast == null) {
       return false;
+    }
+    if (mCurrentToast.getId() == toastId && mCurrentToast.hasShown()) {
+      mCurrentToast = null;
+      return true;
     }
     if (mCurrentToast.getId() == toastId) {
       mCurrentToast.getToastFragment().slideOut(mCurrentToast.getFragmentManager());
@@ -193,19 +224,22 @@ public class ToastManager {
   }
 
   private void showNextToast(boolean slide) {
-    if (!mToastQueue.isEmpty() && mCurrentToast == null) {
+    if (!mToastQueue.isEmpty()
+        && (mCurrentToast == null
+        || mCurrentToast.hasShown())) {
       ToastState ts = mToastQueue.remove();
       SlidingToastFragment toastFragment = ts.getToastFragment();
       toastFragment.setSlideOutListener(mSlideOutListener);
       mCurrentToast = ts;
       if (slide) {
+        mCurrentToast.setDisplayTime(System.currentTimeMillis());
         toastFragment.slideIn(ts.getFragmentManager(), ts.getLayoutParent(), ts.getAutoHide());
       } else {
         toastFragment.fadeIn(ts.getFragmentManager(), ts.getLayoutParent(), ts.getAutoHide());
       }
     } else if (mToastQueue.isEmpty()
         && mCurrentToast != null
-        && !mCurrentToast.getToastFragment().isShowing()) {
+        && mCurrentToast.hasShown()) {
       mCurrentToast = null;
     }
   }
