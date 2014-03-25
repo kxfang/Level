@@ -6,5 +6,5 @@
         android:drawable="@drawable/button_done_pressed" />
     <item
         android:state_enabled="true"
-        android:drawable="@drawable/button_done_enabled" />
+        android:drawable="@drawable/ic_confirmation" />
 </selector>

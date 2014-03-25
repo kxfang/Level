@@ -1,44 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.kxfang.level.app.SlideableRelativeLayout
+<com.kxfang.level.app.SlideableFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/menu_linear_layout"
     android:layout_width="match_parent"
-    android:layout_height="110dp"
-    android:layout_centerVertical="true"
+    android:layout_height="wrap_content"
     android:layout_margin="@dimen/ui_component_margin"
-    android:padding="@dimen/activity_horizontal_margin"
-    android:background="@drawable/card" >
-
-    <ImageView
-        style="@style/AppTheme"
-        android:id="@+id/image_banner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/ui_component_margin"
-        android:layout_centerVertical="true" />
-
-    <Button
-        android:id="@+id/button_banner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/ui_component_margin"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:background="@drawable/button"
-        android:gravity="center_vertical"/>
-
-    <TextView
-        style="@android:style/Widget.Holo.Light.TextView"
-        android:id="@+id/text_banner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/image_banner"
-        android:layout_toLeftOf="@id/button_banner"
-        android:textColor="@android:color/secondary_text_dark"
-        android:layout_centerVertical="true"
-        android:fontFamily="sans-serif" />
-
-
-
-</com.kxfang.level.app.SlideableRelativeLayout>
+    android:padding="@dimen/ui_component_padding"
+    android:background="@drawable/card"
+    android:transformPivotX="0dp"
+    android:transformPivotY="0dp" />

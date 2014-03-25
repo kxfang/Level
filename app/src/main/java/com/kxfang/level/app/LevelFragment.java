@@ -46,7 +46,9 @@ public class LevelFragment extends Fragment {
     @Override
     public void onSensorChanged(SensorEvent sensorEvent, float[] filteredValues) {
       mSensorValues = sensorEvent.values;
-//      SensorDebugFragment.get().setData(sensorEvent.values, filteredValues);
+      OrientationManager.getInstance().setCurrentPosition(
+          OrientationManager.getDeviceTilt(mSensorValues[2]),
+          OrientationManager.getRotationDegrees(mSensorValues[0], mSensorValues[1]));
       setPosition(
           OrientationManager.getDeviceTilt(filteredValues[2]),
           OrientationManager.getRotationDegrees(filteredValues[0], filteredValues[1]));
@@ -59,7 +61,6 @@ public class LevelFragment extends Fragment {
   }, new ArrayList<FloatFilter>());
 
   private void setPosition(float deviceTilt, float rotation) {
-    OrientationManager.getInstance().setCurrentPosition(deviceTilt, rotation);
     if (deviceTilt > 44.5f
         && deviceTilt < 134.5f) {
       setActiveLevelView(mHorizonLevelView);

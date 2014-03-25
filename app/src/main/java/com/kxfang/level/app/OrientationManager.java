@@ -4,12 +4,16 @@ import android.content.pm.ActivityInfo;
 import android.hardware.SensorManager;
 import android.view.Surface;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Static methods for calculating the device orientation.
  */
 public final class OrientationManager {
 
   private static final OrientationManager INSTANCE = new OrientationManager();
+  private static final float ORIENTATION_CHANGE_THRESHOLD = 5;
 
   private int mCurrentOrientation;
   private float mRotation;
@@ -17,9 +21,16 @@ public final class OrientationManager {
   private float mAccurateDeviceRotation;
   private float mAccurateDeviceRotationTilt;
 
+  public interface OrientationChangeListener {
+    public void onOrientationChanged(int oldOrientation, int newOrientation);
+  }
+
+  List<OrientationChangeListener> mListeners;
+
 
   private OrientationManager() {
     mCurrentOrientation = Surface.ROTATION_0;
+    mListeners = new ArrayList<OrientationChangeListener>();
   }
 
   public static OrientationManager getInstance() {
@@ -35,17 +46,43 @@ public final class OrientationManager {
       mAccurateDeviceRotation = mRotation;
       mAccurateDeviceRotationTilt = mTilt;
     }
+
+    int newOrientation = getCurrentOrientation();
+    if (mCurrentOrientation != newOrientation) {
+      for (OrientationChangeListener l : mListeners) {
+        l.onOrientationChanged(mCurrentOrientation, newOrientation);
+      }
+      mCurrentOrientation = newOrientation;
+    }
+  }
+
+  public void addOrientationChangeListener(OrientationChangeListener listener) {
+    mListeners.add(listener);
+  }
+
+  public void removeOrientationChangeListener(OrientationChangeListener listener) {
+    mListeners.remove(listener);
   }
 
   public int getCurrentOrientation() {
-    if (mAccurateDeviceRotation > 45 && mAccurateDeviceRotation <= 135) {
+    if (mCurrentOrientation != Surface.ROTATION_90
+        && mAccurateDeviceRotation > 45 + ORIENTATION_CHANGE_THRESHOLD
+        && mAccurateDeviceRotation <= 135 - ORIENTATION_CHANGE_THRESHOLD) {
       return Surface.ROTATION_90;
-    } else if (mAccurateDeviceRotation > 135 && mAccurateDeviceRotation <= 225) {
+    } else if (mCurrentOrientation != Surface.ROTATION_180
+        && mAccurateDeviceRotation > 135 + ORIENTATION_CHANGE_THRESHOLD
+        && mAccurateDeviceRotation <= 225 - ORIENTATION_CHANGE_THRESHOLD) {
       return Surface.ROTATION_180;
-    } else if (mAccurateDeviceRotation > 225 && mAccurateDeviceRotation <= 315) {
+    } else if (mCurrentOrientation != Surface.ROTATION_270
+        && mAccurateDeviceRotation > 225 + ORIENTATION_CHANGE_THRESHOLD
+        && mAccurateDeviceRotation <= 315 - ORIENTATION_CHANGE_THRESHOLD) {
       return Surface.ROTATION_270;
-    } else {
+    } else if (mCurrentOrientation != Surface.ROTATION_0
+        && (mAccurateDeviceRotation > 315 + ORIENTATION_CHANGE_THRESHOLD
+        || mAccurateDeviceRotation <= 35 - ORIENTATION_CHANGE_THRESHOLD)) {
       return Surface.ROTATION_0;
+    } else {
+      return mCurrentOrientation;
     }
   }
 
