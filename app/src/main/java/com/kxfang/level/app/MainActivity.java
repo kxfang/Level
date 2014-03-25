@@ -122,12 +122,6 @@ public class MainActivity extends Activity {
   }
 
   @Override
-  protected void onStop() {
-    super.onStop();
-    ToastManager.getInstance().clearToasts();
-  }
-
-  @Override
   protected void onResume() {
     super.onResume();
     mShakeDetector.start(mSensorManager);
@@ -137,5 +131,6 @@ public class MainActivity extends Activity {
   protected void onPause() {
     super.onPause();
     mShakeDetector.stop();
+    ToastManager.getInstance().clearToasts();
   }
 }

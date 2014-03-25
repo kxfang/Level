@@ -6,7 +6,7 @@
     <string name="calibration">Place your device on a flat horizontal surface and press Calibrate</string>
     <string name="calibrate_button">Calibrate</string>
     <string name="calibrate_confirm"><b>Calibration saved!</b>\nYou can restore default calibration by shaking your device.</string>
-    <string name="calibrate_restore">Default calibration restored!</string>
+    <string name="calibrate_restore"><b>Default calibration restored!</b></string>
     <string name="reset_confirmation_title">Reset your calibrations?</string>
     <string name="reset_confirmation_message">Default calibrations will be restored.</string>
 </resources>
