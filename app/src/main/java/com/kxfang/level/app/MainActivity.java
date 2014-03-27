@@ -52,9 +52,11 @@ public class MainActivity extends Activity {
   private class CalibrationViewListener implements SlidingToastFragment.OnCreateViewListener {
 
     private int mStringResId;
+    private LevelFragment.CalibrationType mType;
 
-    private CalibrationViewListener(int stringResId) {
+    private CalibrationViewListener(int stringResId, LevelFragment.CalibrationType calibrationType) {
       mStringResId = stringResId;
+      mType = calibrationType;
     }
 
     @Override
@@ -73,7 +75,7 @@ public class MainActivity extends Activity {
               R.id.main_layout,
               R.drawable.ic_confirmation,
               R.string.calibrate_confirm);
-          mLevelFragment.calibrate();
+          mLevelFragment.calibrate(mType);
           enableUiAutoHide();
           hideUi();
           mCalibrating = false;
@@ -114,21 +116,30 @@ public class MainActivity extends Activity {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.action_calibrate_bullseye:
-      case R.id.action_calibrate_horizon:
-        ToastManager.getInstance().hideToast(mCalibrationToastId);
-        mCalibrationToastId = ToastManager.getInstance().showToast(
-            getFragmentManager(),
-            R.id.main_layout,
-            0,
-            new CalibrationViewListener(R.string.calibration));
-        mCalibrating = true;
-        break;
-      case R.id.action_calibrate_reset:
-        resetCalibration();
-        break;
+    int id = item.getItemId();
+
+    if (id == R.id.action_calibrate_reset) {
+      resetCalibration();
+    } else if (id == R.id.action_calibrate_bullseye || id == R.id.action_calibrate_horizon) {
+      int stringResId;
+      LevelFragment.CalibrationType type;
+      if (id == R.id.action_calibrate_bullseye) {
+        stringResId = R.string.calibrate_surface;
+        type = LevelFragment.CalibrationType.SURFACE;
+      } else {
+        stringResId = R.string.calibrate_horizon;
+        type = LevelFragment.CalibrationType.HORIZON;
+      }
+
+      ToastManager.getInstance().hideToast(mCalibrationToastId);
+      mCalibrationToastId = ToastManager.getInstance().showToast(
+          getFragmentManager(),
+          R.id.main_layout,
+          0,
+          new CalibrationViewListener(stringResId, type));
+      mCalibrating = true;
     }
+
     return super.onOptionsItemSelected(item);
   }
 
@@ -199,6 +210,8 @@ public class MainActivity extends Activity {
   protected void onResume() {
     super.onResume();
     enableUiAutoHide();
+    mHandler.postDelayed(mHideUiRunnable, 3000);
+    
     mShakeDetector.start(mSensorManager);
 
     getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(

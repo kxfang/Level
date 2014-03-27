@@ -12,12 +12,8 @@
         android:layout_centerVertical="true" />
 
     <TextView
-        style="@style/StandardMarginComponent"
+        style="@style/ToastTextStyle"
         android:id="@+id/text_right"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:textColor="@android:color/secondary_text_dark"
         android:layout_toRightOf="@id/image_left" />
 
 </RelativeLayout>

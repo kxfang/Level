@@ -41,6 +41,11 @@ public class LevelFragment extends Fragment {
   private float[] mSensorValues;
   private float mRotationCalibrationOffset;
 
+  public enum CalibrationType {
+    SURFACE,
+    HORIZON
+  }
+
   // SensorEventListener
   private SensorFilter mSensorEventListener = new SensorFilter(new SensorFilter.Listener() {
     @Override
@@ -127,14 +132,13 @@ public class LevelFragment extends Fragment {
     }
   }
 
-  public void calibrate() {
-    final boolean isFlatCalibration = mActiveLevelView == mBullsEyeLevelView;
+  public void calibrate(final CalibrationType type) {
     final float[] calibrationOffsets = Arrays.copyOf(mSensorValues, 3);
     final float horizontalRotationOffset;
     float deviceRotation =
         OrientationManager.getRotationDegrees(calibrationOffsets[0], calibrationOffsets[1]);
     ObjectAnimator animator;
-    if (isFlatCalibration) {
+    if (type == CalibrationType.SURFACE) {
       CalibrationManager.getInstance().storeFlatCalibration(getActivity(), calibrationOffsets);
       animator = ObjectAnimator.ofFloat(this, "tilt", mLevelViewPosition.getTilt(), 0);
       horizontalRotationOffset = mRotationCalibrationOffset;
@@ -166,7 +170,7 @@ public class LevelFragment extends Fragment {
 
       @Override
       public void onAnimationEnd(Animator animator) {
-        if (isFlatCalibration) {
+        if (type == CalibrationType.SURFACE) {
           setFilterChain(getDefaultFilters(calibrationOffsets));
         } else {
           mRotationCalibrationOffset = horizontalRotationOffset;

@@ -3,8 +3,9 @@
 
     <string name="app_name">Level</string>
     <string name="hello_world">Hello world!</string>
-    <string name="calibration">Place your device on a flat horizontal surface and press Calibrate</string>
-    <string name="calibrate_button">Calibrate</string>
+    <string name="calibrate_surface"><b>Calibrate surface</b>\nPlace your device face-up on a flat horizontal surface and press Done</string>
+    <string name="calibrate_horizon"><b>Calibrate horizon</b>\nHold your device upright making the on-screen horizon parallel to the ground and press Done</string>
+    <string name="calibrate_button">Done</string>
     <string name="calibrate_confirm"><b>Calibration saved!</b>\nYou can restore default calibration by shaking your device.</string>
     <string name="calibrate_restore"><b>Default calibration restored!</b></string>
     <string name="reset_confirmation_title">Reset your calibrations?</string>
