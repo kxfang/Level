@@ -140,22 +140,15 @@ public class LevelFragment extends Fragment {
       horizontalRotationOffset = mRotationCalibrationOffset;
     } else {
       horizontalRotationOffset = OrientationManager.getHorizonOffset(deviceRotation);
-      Log.d("CALI", "" + horizontalRotationOffset);
       CalibrationManager.getInstance().storeHorizontalCalibration(
           getActivity(), horizontalRotationOffset);
 
       float animateSrc;
       float animateDst;
-//      if (horizontalRotationOffset > 0) {
       mRotationCalibrationOffset = 0;
-        animateSrc = mLevelViewPosition.getRotation();
-      Log.d("TAG", animateSrc + "");
-        animateDst = deviceRotation + horizontalRotationOffset;
-      Log.d("TAG", animateDst + "");
-//      } else {
-//        animateSrc = mLevelViewPosition.getRotation() + horizontalRotationOffset;
-//        animateDst = mLevelViewPosition.getRotation();
-//      }
+      animateSrc = mLevelViewPosition.getRotation();
+      animateDst = deviceRotation + horizontalRotationOffset;
+
       animator = ObjectAnimator.ofFloat(
           this,
           "rotation",
@@ -208,7 +201,7 @@ public class LevelFragment extends Fragment {
 
   private void logFloatValues(float[] values) {
     for (int i = 0; i < 3; i++) {
-        Log.d("TAG", "" + (char) (i + 'x') + ": " + values[i]);
+      Log.d("TAG", "" + (char) (i + 'x') + ": " + values[i]);
     }
   }
 
@@ -243,5 +236,21 @@ public class LevelFragment extends Fragment {
     super.onPause();
     unregisterListeners();
     CalibrationManager.getInstance().commit(getActivity());
+  }
+
+  private void hideUi() {
+    int hideUiFlags = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+        | View.SYSTEM_UI_FLAG_IMMERSIVE;
+
+    mBullsEyeLevelView.setSystemUiVisibility(hideUiFlags);
+  }
+
+  private void showUi() {
+    int showUiFlags = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+    mBullsEyeLevelView.setSystemUiVisibility(showUiFlags);
   }
 }

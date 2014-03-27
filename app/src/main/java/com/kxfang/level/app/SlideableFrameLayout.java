@@ -5,7 +5,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Surface;
+import android.view.View;
 import android.widget.FrameLayout;
 
 /**
@@ -17,22 +19,20 @@ public class SlideableFrameLayout extends FrameLayout {
   private int mOrientation;
   private float mScreenWidth;
   private float mScreenHeight;
+  private float mFullScreenHeight;
   private float mXStart;
   private float mXEnd;
   private float mYStart;
   private float mYEnd;
   private float mScreenMargin;
   private boolean mSlideIn;
+  private Context mContext;
 
   public SlideableFrameLayout(Context context, AttributeSet attrs) {
     super(context, attrs);
     mFloatEvaluator = new FloatEvaluator();
-    DisplayMetrics displayMetrics = new DisplayMetrics();
-    ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-    mScreenWidth = displayMetrics.widthPixels;
-    mScreenHeight = displayMetrics.heightPixels;
-
     mScreenMargin = context.getResources().getDimension(R.dimen.ui_component_margin);
+    mContext = context;
   }
 
   @Override
@@ -52,27 +52,70 @@ public class SlideableFrameLayout extends FrameLayout {
     setAlpha(fraction);
   }
 
+  @Override
+  protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+    super.onLayout(changed, left, top, right, bottom);
+    updateOrientation();
+  }
+
   public void setOrientation(int orientation) {
     mOrientation = orientation;
-    updateOrientation();
   }
 
   public void setSlideIn(boolean slideIn) {
     mSlideIn = slideIn;
-    updateOrientation();
   }
 
   private void updateOrientation() {
+    DisplayMetrics displayMetrics = new DisplayMetrics();
+    ((Activity) mContext).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+    mScreenWidth = displayMetrics.widthPixels;
+    mScreenHeight = displayMetrics.heightPixels;
+
+    View parent = (View) getParent();
+    if (parent != null) {
+      mFullScreenHeight = parent.getHeight();
+    } else {
+      mFullScreenHeight = mScreenHeight;
+    }
+
+// Coordinates for making toast appear on top of screen
+//    mXStart = mScreenWidth / 2 - getWidth() / 2;
+//    mYStart = -1 * getHeight();
+//    mXEnd = mXStart;
+//    mYEnd = mYStart + getHeight() + mScreenMargin;
+//
+//    switch (mOrientation) {
+//      case Surface.ROTATION_90:
+//        mXStart = mScreenWidth + getHeight();
+//        mXEnd = mScreenWidth - mScreenMargin;
+//        mYStart = mScreenHeight / 2 - getWidth() / 2;
+//        mYEnd = mYStart;
+//        break;
+//      case Surface.ROTATION_180:
+//        mXStart = mXStart + getWidth();
+//        mXEnd = mXStart;
+//        mYStart = mScreenHeight + getHeight();
+//        mYEnd = mScreenHeight - mScreenMargin;
+//        break;
+//      case Surface.ROTATION_270:
+//        mXStart = mXStart - getHeight() - mScreenMargin;
+//        mYStart = mScreenHeight / 2 + getWidth() / 2;
+//        mYEnd = mYStart;
+//        break;
+//    }
+
+    float translation = getHeight() + mScreenMargin;
     mXStart = mScreenWidth / 2 - getWidth() / 2;
-    mYStart = -1 * getHeight();
+    mYStart = mScreenHeight;
     mXEnd = mXStart;
-    mYEnd = mYStart + getHeight() + mScreenMargin;
+    mYEnd = mYStart - translation;
 
     switch (mOrientation) {
       case Surface.ROTATION_90:
-        mXStart = mScreenWidth + getHeight();
-        mXEnd = mScreenWidth - mScreenMargin;
-        mYStart = mScreenHeight / 2 - getWidth() / 2;
+        mXStart = 0;
+        mXEnd = translation;
+        mYStart = mFullScreenHeight / 2 - getWidth() / 2;
         mYEnd = mYStart;
         break;
       case Surface.ROTATION_180:
@@ -82,8 +125,9 @@ public class SlideableFrameLayout extends FrameLayout {
         mYEnd = mScreenHeight - mScreenMargin;
         break;
       case Surface.ROTATION_270:
-        mXStart = mXStart - getHeight() - mScreenMargin;
-        mYStart = mScreenHeight / 2 + getWidth() / 2;
+        mXStart = mScreenWidth;
+        mXEnd = mXStart - translation;
+        mYStart = mFullScreenHeight / 2 + getWidth() / 2;
         mYEnd = mYStart;
         break;
     }

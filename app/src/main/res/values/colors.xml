@@ -22,4 +22,5 @@
     </array>
 
     <color name="menu_bg">#44000000</color>
+    <color name="action_bar_bg">#1CFFFFFF</color>
 </resources>

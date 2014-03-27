@@ -1,7 +1,33 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo">
+    <style name="OverlayActionBarTheme"
+           parent="android:Theme.Holo.Light.DarkActionBar">
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:popupMenuStyle">@style/PopupStyle</item>
+        <item name="android:actionBarStyle">@style/ActionBarStyle</item>
+        <item name="android:actionBarWidgetTheme">@style/OverlayActionBarTheme</item>
+    </style>
+
+    <style name="ActionBarStyle"
+           parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/action_bar_bg</item>
+    </style>
+
+    <style name="PopupStyle"
+           parent="android:Theme.Holo.Light">
+        <item name="android:popupBackground">@android:color/white</item>
+    </style>
+
+    <style name="StandardMarginComponent"
+           parent="OverlayActionBarTheme">
+        <item name="android:layout_margin">@dimen/ui_component_margin</item>
+    </style>
+
+    <style name="ToastButtonStyle"
+        parent="android:Widget.Holo.Light.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">@dimen/ui_component_margin</item>
     </style>
 

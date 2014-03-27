@@ -50,18 +50,11 @@ public class CalibrationFilter implements FloatFilter {
     };
 
     mRotationMatrix = new Matrix(rotationMatrix);
-    Log.d("TAT", "rotation mat");
-    log(mRotationAxis);
-    log(mRotationMatrix);
 
     mBasisX = mRotationMatrix.times(new Matrix(UNIT_X, UNIT_X.length));
     normalize(mBasisX);
     mBasisY = mRotationMatrix.times(new Matrix(UNIT_Y, UNIT_Y.length));
     normalize(mBasisY);
-
-    Log.d("TAT", "" + dotProduct(mBasisX, mBasisZ));
-    Log.d("TAT", "" + dotProduct(mBasisY, mBasisZ));
-    Log.d("TAT", "" + dotProduct(mBasisX, mBasisY));
 
     double[][] basisArray = {
         mBasisX.getColumnPackedCopy(),
@@ -70,8 +63,6 @@ public class CalibrationFilter implements FloatFilter {
 
     mBasisMatrix = new Matrix(basisArray).transpose();
     mBMatrix = new Matrix(1, UNIT_X.length).transpose();
-    Log.d("BASISMATRIX", "basis");
-    log(mBasisMatrix);
   }
 
   public static FloatFilter withOffsets(float[] offsets) {
@@ -99,8 +90,6 @@ public class CalibrationFilter implements FloatFilter {
   }
 
   private double dotProduct(Matrix vec1, Matrix vec2) {
-    log(vec1);
-    log(vec2);
     if (vec1.getColumnDimension() > 1 || vec2.getColumnDimension() > 1) {
       throw new IllegalArgumentException("Matrix is not one-dimensional");
     }
@@ -134,15 +123,11 @@ public class CalibrationFilter implements FloatFilter {
 
   @Override
   public float[] next(float[] next) {
-//    log(mBMatrix);
     for (int i = 0; i < next.length; i++) {
       mBMatrix.set(i, 0, next[i]);
     }
 
     Matrix x = mBasisMatrix.solve(mBMatrix);
-
-//    log(mBasisMatrix.times(x));
-//    log(mBMatrix);
 
     for (int i = 0; i < x.getRowDimension(); i++) {
       next[i] = (float) x.get(i, 0);

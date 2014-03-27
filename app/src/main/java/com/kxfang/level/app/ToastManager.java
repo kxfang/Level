@@ -186,6 +186,13 @@ public class ToastManager {
     return ts.getId();
   }
 
+  public void hideAllToasts() {
+    mToastQueue.clear();
+    if (mCurrentToast != null) {
+      hideToast(mCurrentToast.getId());
+    }
+  }
+
   public void clearToasts() {
     mToastQueue.clear();
     if (mCurrentToast != null) {

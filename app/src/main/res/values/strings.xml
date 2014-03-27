@@ -9,4 +9,7 @@
     <string name="calibrate_restore"><b>Default calibration restored!</b></string>
     <string name="reset_confirmation_title">Reset your calibrations?</string>
     <string name="reset_confirmation_message">Default calibrations will be restored.</string>
+    <string name="action_calibrate_horizon">Calibrate horizon</string>
+    <string name="action_calibrate_bullseye">Calibrate surface</string>
+    <string name="action_calibrate_reset">Reset calibration</string>
 </resources>

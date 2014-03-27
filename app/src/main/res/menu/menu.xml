@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/options_menu">
+    <item
+        android:id="@+id/action_calibrate_horizon"
+        android:title="@string/action_calibrate_horizon" />
+    <item
+        android:id="@+id/action_calibrate_bullseye"
+        android:title="@string/action_calibrate_bullseye" />
+    <item
+        android:id="@+id/action_calibrate_reset"
+        android:title="@string/action_calibrate_reset" />
+</menu>
