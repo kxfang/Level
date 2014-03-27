@@ -241,20 +241,4 @@ public class LevelFragment extends Fragment {
     unregisterListeners();
     CalibrationManager.getInstance().commit(getActivity());
   }
-
-  private void hideUi() {
-    int hideUiFlags = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-        | View.SYSTEM_UI_FLAG_IMMERSIVE;
-
-    mBullsEyeLevelView.setSystemUiVisibility(hideUiFlags);
-  }
-
-  private void showUi() {
-    int showUiFlags = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
-    mBullsEyeLevelView.setSystemUiVisibility(showUiFlags);
-  }
 }

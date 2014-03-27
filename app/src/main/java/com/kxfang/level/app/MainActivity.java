@@ -153,6 +153,7 @@ public class MainActivity extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    showUi(); 
 
     mHandler = new Handler(Looper.getMainLooper());
 
@@ -209,6 +210,7 @@ public class MainActivity extends Activity {
   @Override
   protected void onResume() {
     super.onResume();
+
     enableUiAutoHide();
     mHandler.postDelayed(mHideUiRunnable, 3000);
     
@@ -241,7 +243,7 @@ public class MainActivity extends Activity {
     if (mUiVisible) {
       hideUi();
     } else {
-      showUi(4000);
+      showUi();
     }
   }
 
@@ -255,7 +257,7 @@ public class MainActivity extends Activity {
     getWindow().getDecorView().setSystemUiVisibility(hideUiFlags);
   }
 
-  private void showUi(long timeOut) {
+  private void showUi() {
     int showUiFlags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
