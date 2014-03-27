@@ -17,8 +17,8 @@
         <item>#FF9933CC</item>
     </array>
     <array name="red">
-        <item>#FFFF4444</item>
-        <item>#FFCC0000</item>
+        <item>#ffff6063</item>
+        <item>#ffec141f</item>
     </array>
 
     <color name="menu_bg">#44000000</color>
