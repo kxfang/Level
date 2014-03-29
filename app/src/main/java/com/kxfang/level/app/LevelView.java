@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.kxfang.level.app.color.ColorSet;
@@ -16,9 +17,11 @@ import com.kxfang.level.app.color.ColorSet;
  * Abstract view that renders the level data from a sensor.
  */
 public abstract class LevelView extends View {
+  private final float PIXEL_DENSITY = getResources().getDisplayMetrics().density;
+
   private final long BACKGROUND_FADE_DURATION;
-  private final float INDICATOR_TEXT_SIZE = 200.0f;
-  private final float INDICATOR_STROKE_WIDTH = 5.0f;
+  private final float INDICATOR_TEXT_SIZE = 100 * PIXEL_DENSITY;
+  private final float INDICATOR_STROKE_WIDTH = 2.5f * PIXEL_DENSITY;
   private final int NUM_HORIZON_INDICATORS = 3;
 
   private Paint mIndicatorPaint;

@@ -154,7 +154,6 @@ public class MainActivity extends Activity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     getWindow().getDecorView().setBackgroundColor(ColorSet.globalColorSet(this).getSecondaryColor());
-    showUi();
 
     mHandler = new Handler(Looper.getMainLooper());
 
@@ -212,8 +211,10 @@ public class MainActivity extends Activity {
   protected void onResume() {
     super.onResume();
 
+    showUi();
+
     enableUiAutoHide();
-    mHandler.postDelayed(mHideUiRunnable, 3000);
+    mHandler.postDelayed(mHideUiRunnable, 1500);
     
     mShakeDetector.start(mSensorManager);
 
