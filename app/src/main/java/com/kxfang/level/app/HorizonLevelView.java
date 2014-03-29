@@ -11,7 +11,7 @@ import android.util.AttributeSet;
  */
 public class HorizonLevelView extends LevelView {
 
-  private final float HORIZON_TILT_THRESHOLD = 42.5f;
+  private final float HORIZON_TILT_THRESHOLD = TRANSFORM_THRESHOLD;
   private final float HORIZON_TILT = 90.0f;
   private final float LINE_INDICATOR_TRANSFORM_START = 30;
   private final float LINE_INDICATOR_TRANSFORM_END = 44;

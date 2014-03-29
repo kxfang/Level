@@ -17,6 +17,9 @@ import com.kxfang.level.app.color.ColorSet;
  * Abstract view that renders the level data from a sensor.
  */
 public abstract class LevelView extends View {
+
+  public static final int TRANSFORM_THRESHOLD = 35;
+
   private final float PIXEL_DENSITY = getResources().getDisplayMetrics().density;
 
   private final long BACKGROUND_FADE_DURATION;

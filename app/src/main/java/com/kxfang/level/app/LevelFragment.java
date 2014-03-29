@@ -66,13 +66,13 @@ public class LevelFragment extends Fragment {
   }, new ArrayList<FloatFilter>());
 
   private void setPosition(float deviceTilt, float rotation) {
-    if (deviceTilt > 44.5f
-        && deviceTilt < 134.5f) {
+    if (deviceTilt > 34.5f
+        && deviceTilt < 144.5f) {
       setActiveLevelView(mHorizonLevelView);
-    } else if (deviceTilt < 45.5f) {
+    } else if (deviceTilt < 35.5f) {
       mBullsEyeLevelView.setConfig(BullsEyeLevelView.Config.DOWN);
       setActiveLevelView(mBullsEyeLevelView);
-    } else if (deviceTilt > 135.5f) {
+    } else if (deviceTilt > 145.5f) {
       mBullsEyeLevelView.setConfig(BullsEyeLevelView.Config.UP);
       setActiveLevelView(mBullsEyeLevelView);
     }

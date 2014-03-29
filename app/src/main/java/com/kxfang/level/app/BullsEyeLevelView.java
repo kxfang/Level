@@ -20,10 +20,11 @@ public class BullsEyeLevelView extends LevelView {
     UP
   }
 
-  private int mArcIndicatorTransformStartTilt = 17;
-  private int mArcIndicatorTransformEndTilt = 30;
-  private int mLineIndicatorTransformStartTilt = 32;
-  private int mLineIndicatorTransformEndTilt = 44;
+
+  private int mArcIndicatorTransformStartTilt = 14;
+  private int mArcIndicatorTransformEndTilt = 25;
+  private int mLineIndicatorTransformStartTilt = 26;
+  private int mLineIndicatorTransformEndTilt = 35;
 
 
   private Config mConfig;
@@ -260,7 +261,7 @@ public class BullsEyeLevelView extends LevelView {
   private float getTopCircleY(float theta) {
     float circleRadius = getCircleRadius();
     return (getHeight() / 2 + circleRadius)
-        * (1 - ((mConfig == Config.DOWN ? theta : 180 - theta) / 45)) - circleRadius;
+        * (1 - ((mConfig == Config.DOWN ? theta : 180 - theta) / TRANSFORM_THRESHOLD)) - circleRadius;
   }
 
   private float getBottomCircleY(float theta) {
