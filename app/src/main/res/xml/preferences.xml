@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:key="pref_show_decimal"
+        android:title="@string/pref_show_decimal"
+        android:summary="@string/pref_show_decimal_summ"
+        android:defaultValue="false" />
+    <CheckBoxPreference
+        android:key="pref_show_incline"
+        android:title="@string/pref_show_incline"
+        android:summary="@string/pref_show_incline_summ"
+        android:defaultValue="false" />
+</PreferenceScreen>

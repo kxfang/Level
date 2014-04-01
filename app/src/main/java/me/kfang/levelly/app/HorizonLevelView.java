@@ -1,4 +1,4 @@
-package com.kxfang.level.app;
+package me.kfang.levelly.app;
 
 import android.animation.ArgbEvaluator;
 import android.content.Context;
@@ -82,9 +82,18 @@ public class HorizonLevelView extends LevelView {
         Float.MAX_VALUE,
         mHorizonPaint);
     canvas.restore();
-    String text = Math.round(displayRotation) + "°";
+
+    String text = getIndicatorText(displayRotation);
     drawCenterText(canvas, text, getIndicatorPaint());
+
+    if (getConfig().showInclination()) {
+      String subText = getIndicatorText(mTilt);
+      drawSubText(canvas, String.format("Inclination: %s", subText), getSubTextPaint());
+    }
+
     canvas.restore();
+
+
 
     drawHorizonIndicators(
         canvas,
@@ -99,10 +108,6 @@ public class HorizonLevelView extends LevelView {
 
   private float getDisplayRotation(float rotation) {
     return OrientationManager.getHorizonOffset(rotation);
-  }
-
-  private boolean isLevel(float rotation) {
-    return Math.abs(rotation) < 0.5f;
   }
 
   private float getHorizonHeight(float tilt) {

@@ -1,9 +1,9 @@
-package com.kxfang.level.app;
+package me.kfang.levelly.app;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.hardware.SensorManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,13 +11,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.kxfang.level.app.color.ColorSet;
+import me.kfang.levelly.color.ColorSet;
 
 public class MainActivity extends Activity {
 
@@ -103,6 +102,9 @@ public class MainActivity extends Activity {
 
     if (id == R.id.action_calibrate_reset) {
       resetCalibration();
+    } else if (id == R.id.action_settings) {
+      Intent intent = new Intent(this, SettingsActivity.class);
+      startActivity(intent);
     } else if (id == R.id.action_calibrate_bullseye || id == R.id.action_calibrate_horizon) {
       int stringResId;
       LevelFragment.CalibrationType type;
@@ -135,6 +137,7 @@ public class MainActivity extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
     setContentView(R.layout.activity_main);
     getWindow().getDecorView().setBackgroundColor(ColorSet.globalColorSet(this).getSecondaryColor());
 

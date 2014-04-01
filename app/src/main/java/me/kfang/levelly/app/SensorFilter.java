@@ -1,10 +1,10 @@
-package com.kxfang.level.app;
+package me.kfang.levelly.app;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 
-import com.kxfang.level.app.filter.FloatFilter;
+import me.kfang.levelly.filter.FloatFilter;
 
 import java.util.Arrays;
 import java.util.List;

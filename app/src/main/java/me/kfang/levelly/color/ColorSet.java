@@ -1,15 +1,15 @@
-package com.kxfang.level.app.color;
+package me.kfang.levelly.color;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 
-import com.kxfang.level.app.R;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+
+import me.kfang.levelly.app.R;
 
 /**
  * Manages color choice for the app.

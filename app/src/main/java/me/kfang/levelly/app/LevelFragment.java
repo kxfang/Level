@@ -1,23 +1,25 @@
-package com.kxfang.level.app;
+package me.kfang.levelly.app;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
-import com.kxfang.level.app.color.ColorSet;
-import com.kxfang.level.app.filter.CalibrationFilter;
-import com.kxfang.level.app.filter.FloatFilter;
-import com.kxfang.level.app.filter.LowPassFilter;
+import me.kfang.levelly.color.ColorSet;
+import me.kfang.levelly.filter.CalibrationFilter;
+import me.kfang.levelly.filter.FloatFilter;
+import me.kfang.levelly.filter.LowPassFilter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +42,8 @@ public class LevelFragment extends Fragment {
 
   private float[] mSensorValues;
   private float mRotationCalibrationOffset;
+
+  private LevelView.Config mLevelViewConfig;
 
   public enum CalibrationType {
     SURFACE,
@@ -227,6 +231,14 @@ public class LevelFragment extends Fragment {
   @Override
   public void onResume() {
     super.onResume();
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+    mLevelViewConfig = new LevelView.Config(
+        preferences.getBoolean(SettingsFragment.PREF_SHOW_DECIMAL, false),
+        preferences.getBoolean(SettingsFragment.PREF_SHOW_INCLINE, false));
+
+    mBullsEyeLevelView.setConfig(mLevelViewConfig);
+    mHorizonLevelView.setConfig(mLevelViewConfig);
+
     float[] calibration = new float[3];
     CalibrationManager.getInstance().loadFlatCalibration(getActivity(), calibration);
     setFilterChain(getDefaultFilters(calibration));

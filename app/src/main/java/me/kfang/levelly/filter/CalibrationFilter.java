@@ -1,8 +1,8 @@
-package com.kxfang.level.app.filter;
+package me.kfang.levelly.filter;
 
 import android.util.Log;
 
-import com.kxfang.level.app.OrientationManager;
+import me.kfang.levelly.app.OrientationManager;
 
 import Jama.Matrix;
 

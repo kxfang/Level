@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Level</string>
+    <string name="app_name">Level.ly</string>
     <string name="hello_world">Hello world!</string>
     <string name="calibrate_surface"><b>Calibrate surface</b>\nPlace your device face-up on a flat horizontal surface and press Done</string>
     <string name="calibrate_horizon"><b>Calibrate horizon</b>\nPlace one of the edges of your device parallel against a flat horizontal surface and press Done</string>
@@ -11,7 +11,11 @@
     <string name="reset_confirmation_title">Reset your calibrations?</string>
     <string name="reset_confirmation_message">Default calibrations will be restored.</string>
     <string name="action_calibrate_horizon">Calibrate horizon</string>
-    <string name="action_calibrate_bullseye">Calibrate surface</string>
+    <string name="action_calibrate_bullseye">Calibrate inclination</string>
     <string name="action_calibrate_reset">Reset calibration</string>
     <string name="settings">Settings</string>
+    <string name="pref_show_decimal">Show decimal place</string>
+    <string name="pref_show_decimal_summ">Show one decimal place for all numbers.</string>
+    <string name="pref_show_incline">Always show inclination</string>
+    <string name="pref_show_incline_summ">Show the inclination of the device when in horizon view.</string>
 </resources>

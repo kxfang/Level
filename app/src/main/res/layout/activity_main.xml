@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:keepScreenOn="true"
-    tools:context="com.kxfang.level.app.MainActivity">
+    tools:context="me.kfang.levelly.app.MainActivity">
 
     <fragment
-        android:name="com.kxfang.level.app.LevelFragment"
+        android:name="me.kfang.levelly.app.LevelFragment"
         android:id="@+id/level_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -19,7 +19,7 @@
         android:alpha="0" />
 
     <!--<fragment-->
-        <!--android:name="com.kxfang.level.app.SensorDebugFragment"-->
+        <!--android:name="me.kfang.levelly.app.SensorDebugFragment"-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content" />-->
 

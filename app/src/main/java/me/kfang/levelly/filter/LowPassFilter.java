@@ -1,4 +1,4 @@
-package com.kxfang.level.app.filter;
+package me.kfang.levelly.filter;
 
 /**
  * A low pass filter that conditionally applies given a threshold.

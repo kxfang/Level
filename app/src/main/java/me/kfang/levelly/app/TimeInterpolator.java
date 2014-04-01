@@ -1,4 +1,4 @@
-package com.kxfang.level.app;
+package me.kfang.levelly.app;
 
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;

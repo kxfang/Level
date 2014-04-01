@@ -1,4 +1,4 @@
-package com.kxfang.level.app;
+package me.kfang.levelly.app;
 
 import android.animation.ArgbEvaluator;
 import android.animation.FloatEvaluator;
@@ -11,7 +11,7 @@ import android.util.AttributeSet;
 import android.view.Surface;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
-import com.kxfang.level.app.color.ColorSet;
+import me.kfang.levelly.color.ColorSet;
 
 public class BullsEyeLevelView extends LevelView {
 
@@ -123,7 +123,7 @@ public class BullsEyeLevelView extends LevelView {
   @Override
   protected void onDraw(Canvas c) {
     super.onDraw(c);
-    boolean flat = isFlat(mTilt, mRotation);
+    boolean flat = isLevel(mTilt);
 
     if (flat != mIsFlat) {
       if (flat && !mIsFlat) {
@@ -193,7 +193,7 @@ public class BullsEyeLevelView extends LevelView {
 
     c.save();
     c.rotate(textRotation, getCenterX(), getCenterY());
-    String text = Math.round(mTilt) + "°";
+    String text = getIndicatorText(mTilt);
     drawCenterText(c, text, mTextPaint);
     c.restore();
     drawArcIndicators(c);
@@ -241,10 +241,6 @@ public class BullsEyeLevelView extends LevelView {
           getIndicatorPaint()
       );
     }
-  }
-
-  private boolean isFlat(float theta, float rotation) {
-    return Math.round(theta) == 0 || Math.round(theta) == 180;
   }
 
   private float getCircleRadius() {

@@ -1,4 +1,4 @@
-package com.kxfang.level.app.filter;
+package me.kfang.levelly.filter;
 
 /**
  * Filter interface used to process a stream of floats.
