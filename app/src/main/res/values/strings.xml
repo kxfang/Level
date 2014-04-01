@@ -6,11 +6,12 @@
     <string name="calibrate_surface"><b>Calibrate surface</b>\nPlace your device face-up on a flat horizontal surface and press Done</string>
     <string name="calibrate_horizon"><b>Calibrate horizon</b>\nPlace one of the edges of your device parallel against a flat horizontal surface and press Done</string>
     <string name="calibrate_button">Done</string>
-    <string name="calibrate_confirm"><b>Calibration saved!</b>\nYou can restore default calibration by shaking your device.</string>
+    <string name="calibrate_confirm"><b>Calibration saved!</b>\nYou can restore default calibration from the menu.</string>
     <string name="calibrate_restore"><b>Default calibration restored!</b></string>
     <string name="reset_confirmation_title">Reset your calibrations?</string>
     <string name="reset_confirmation_message">Default calibrations will be restored.</string>
     <string name="action_calibrate_horizon">Calibrate horizon</string>
     <string name="action_calibrate_bullseye">Calibrate surface</string>
     <string name="action_calibrate_reset">Reset calibration</string>
+    <string name="settings">Settings</string>
 </resources>

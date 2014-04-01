@@ -18,30 +18,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.kxfang.level.app.color.ColorSet;
-import com.squareup.seismic.ShakeDetector;
 
 public class MainActivity extends Activity {
 
   private Button mScreenOverlayButton;
 
-  // Calibration view
-  private SlidingToastFragment mCalibrationFragment;
-  private View mCalibrationView;
-  private Button mCalibrationButton;
-
-  // Confirmation view
-  private SlidingToastFragment mConfirmationFragment;
-  private TextView mConfirmationText;
-
   private LevelFragment mLevelFragment;
 
-  private ShakeDetector mShakeDetector;
-
-  private SensorManager mSensorManager;
-
-  private OrientationEventListener mOrientationEventListener;
-
-  private boolean mShowConfirmation;
   private int mCalibrationToastId;
   private boolean mUiVisible = true;
   private boolean mShouldHideUi;
@@ -158,7 +141,6 @@ public class MainActivity extends Activity {
     mHandler = new Handler(Looper.getMainLooper());
 
     mLevelFragment = (LevelFragment) getFragmentManager().findFragmentById(R.id.level_fragment);
-    mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
     mScreenOverlayButton = (Button) findViewById(R.id.button_screen_overlay);
     mScreenOverlayButton.setOnClickListener(new View.OnClickListener() {
@@ -170,14 +152,6 @@ public class MainActivity extends Activity {
         } else {
           toggleUi();
         }
-      }
-    });
-
-    // TODO: Use raw sensor data for determining which view to calibrate
-    mShakeDetector = new ShakeDetector(new ShakeDetector.Listener() {
-      @Override
-      public void hearShake() {
-        resetCalibration();
       }
     });
   }
@@ -215,8 +189,6 @@ public class MainActivity extends Activity {
 
     enableUiAutoHide();
     mHandler.postDelayed(mHideUiRunnable, 1500);
-    
-    mShakeDetector.start(mSensorManager);
 
     getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(
         new View.OnSystemUiVisibilityChangeListener() {
@@ -236,7 +208,6 @@ public class MainActivity extends Activity {
   @Override
   protected void onPause() {
     super.onPause();
-    mShakeDetector.stop();
     disableUiAutoHide();
     ToastManager.getInstance().clearToasts();
   }
