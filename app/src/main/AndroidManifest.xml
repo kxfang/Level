@@ -30,7 +30,7 @@
         </activity>
         <activity
             android:name="me.kfang.levelly.app.SettingsActivity"
-            android:label="Settings"
+            android:label="@string/settings"
             android:theme="@android:style/Theme.Holo.Light"
             android:screenOrientation="portrait"
             android:parentActivityName="me.kfang.levelly.app.MainActivity" />

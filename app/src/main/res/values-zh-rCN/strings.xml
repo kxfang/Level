@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">水平仪</string>
+    <string name="calibrate_surface"><b>校准平面度</b>\n请将手机面朝上放在与地面平行的平面上，然后轻触“完成”。</string>
+    <string name="calibrate_horizon"><b>校准水平度</b>\n请将手机立起，调整手机的一边与地面平行，然后轻触“完成”。</string>
+    <string name="calibrate_button">完成</string>
+    <string name="calibrate_confirm"><b>校准已保存!</b>\n您可以从菜单里重置校准位置。</string>
+    <string name="calibrate_restore"><b>校准位置重置!</b></string>
+    <string name="reset_confirmation_title">您确认要重置校准位置吗?</string>
+    <string name="reset_confirmation_message">校准位置将被重置。</string>
+    <string name="action_calibrate_horizon">校准水平度</string>
+    <string name="action_calibrate_bullseye">校准平面度</string>
+    <string name="action_calibrate_reset">重置校准</string>
+    <string name="settings">设置</string>
+    <string name="pref_show_decimal">显示小数点</string>
+    <string name="pref_show_decimal_summ">在所有数字上显示一位小数点。</string>
+    <string name="pref_show_incline">显示平面度</string>
+    <string name="pref_show_incline_summ">在水平模式下仍然显示平面度。</string>
+    <string name="sensor_unsupported">对不起，您的手机缺乏测量水平的仪器。</string>
+    <string name="label_inclination">平面度：%s</string>
+</resources>

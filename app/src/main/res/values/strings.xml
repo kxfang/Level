@@ -3,7 +3,7 @@
 
     <string name="app_name">Level.ly</string>
     <string name="hello_world">Hello world!</string>
-    <string name="calibrate_surface"><b>Calibrate surface</b>\nPlace your device face-up on a flat horizontal surface and press Done</string>
+    <string name="calibrate_surface"><b>Calibrate inclination</b>\nPlace your device face-up on a flat horizontal surface and press Done</string>
     <string name="calibrate_horizon"><b>Calibrate horizon</b>\nPlace one of the edges of your device parallel against a flat horizontal surface and press Done</string>
     <string name="calibrate_button">Done</string>
     <string name="calibrate_confirm"><b>Calibration saved!</b>\nYou can restore default calibration from the menu.</string>
@@ -18,5 +18,6 @@
     <string name="pref_show_decimal_summ">Show one decimal place for all numbers.</string>
     <string name="pref_show_incline">Always show inclination</string>
     <string name="pref_show_incline_summ">Show the inclination of the device when in horizon view.</string>
-    <string name="sensor_unsupported">Your device does not have the required sensors.</string>
+    <string name="sensor_unsupported">Sorry, your device does not have the required sensors.</string>
+    <string name="label_inclination">Inclination: %s</string>
 </resources>

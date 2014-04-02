@@ -24,6 +24,8 @@ public class HorizonLevelView extends LevelView {
 
   private Paint mHorizonPaint;
 
+  private String mInclinationIndicator;
+
   public HorizonLevelView(Context context, AttributeSet attrs) {
     super(context, attrs);
 
@@ -35,6 +37,8 @@ public class HorizonLevelView extends LevelView {
     mColorEvaluator = new ArgbEvaluator();
 
     mIsLevel = false;
+
+    mInclinationIndicator = context.getResources().getString(R.string.label_inclination);
   }
 
   @Override
@@ -88,7 +92,7 @@ public class HorizonLevelView extends LevelView {
 
     if (getConfig().showInclination()) {
       String subText = getIndicatorText(mTilt);
-      drawSubText(canvas, String.format("Inclination: %s", subText), getSubTextPaint());
+      drawSubText(canvas, String.format(mInclinationIndicator, subText), getSubTextPaint());
     }
 
     canvas.restore();
