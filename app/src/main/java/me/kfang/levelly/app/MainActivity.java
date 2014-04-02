@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -28,6 +30,8 @@ public class MainActivity extends Activity {
   private boolean mUiVisible = true;
   private boolean mShouldHideUi;
   private boolean mCalibrating = false;
+
+  private boolean mSupported = true;
 
   private Handler mHandler;
 
@@ -138,6 +142,13 @@ public class MainActivity extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
+    SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+    if (sensorManager.getSensorList(Sensor.TYPE_GRAVITY).isEmpty()) {
+      mSupported = false;
+      setContentView(R.layout.activity_main_no_sensor);
+      return;
+    }
+
     setContentView(R.layout.activity_main);
     getWindow().getDecorView().setBackgroundColor(ColorSet.globalColorSet(this).getSecondaryColor());
 
@@ -188,6 +199,13 @@ public class MainActivity extends Activity {
   protected void onResume() {
     super.onResume();
 
+    if (!mSupported) {
+      if (getActionBar() != null) {
+        getActionBar().hide();
+      }
+      return;
+    }
+
     showUi();
 
     enableUiAutoHide();
@@ -211,8 +229,10 @@ public class MainActivity extends Activity {
   @Override
   protected void onPause() {
     super.onPause();
-    disableUiAutoHide();
-    ToastManager.getInstance().clearToasts();
+    if (mSupported) {
+      disableUiAutoHide();
+      ToastManager.getInstance().clearToasts();
+    }
   }
 
   private void toggleUi() {

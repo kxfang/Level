@@ -18,4 +18,5 @@
     <string name="pref_show_decimal_summ">Show one decimal place for all numbers.</string>
     <string name="pref_show_incline">Always show inclination</string>
     <string name="pref_show_incline_summ">Show the inclination of the device when in horizon view.</string>
+    <string name="sensor_unsupported">Your device does not have the required sensors.</string>
 </resources>
