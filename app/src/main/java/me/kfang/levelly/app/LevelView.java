@@ -35,6 +35,8 @@ public abstract class LevelView extends View {
   private Rect mTextBounds;
   private float mHorizonIndicatorLength;
 
+  private boolean mWasLevel = false;
+
   private FloatEvaluator mFloatEvaluator;
 
   private ColorSet mColorSet;
@@ -274,6 +276,8 @@ public abstract class LevelView extends View {
   }
 
   protected boolean isLevel(float value) {
-    return Math.abs(value) < 0.2 || Math.abs(value) > 179.8;
+    float threshold = mWasLevel ? 0.3f : 0.2f;
+    mWasLevel = Math.abs(value) < threshold || Math.abs(value) > 180 - threshold;
+    return mWasLevel;
   }
 }
