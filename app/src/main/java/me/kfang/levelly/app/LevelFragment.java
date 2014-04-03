@@ -20,6 +20,7 @@ import me.kfang.levelly.color.ColorSet;
 import me.kfang.levelly.filter.CalibrationFilter;
 import me.kfang.levelly.filter.FloatFilter;
 import me.kfang.levelly.filter.LowPassFilter;
+import me.kfang.levelly.filter.ThresholdLowPassFilter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -119,7 +120,7 @@ public class LevelFragment extends Fragment {
   private List<FloatFilter> getDefaultFilters(float[] calibrationValues) {
     List<FloatFilter> filters = new LinkedList<FloatFilter>();
     filters.add(CalibrationFilter.withOffsets(calibrationValues));
-    filters.add(new LowPassFilter(0.75f, 0.008f));
+    filters.add(new ThresholdLowPassFilter(0.75f, 0.008f));
     return filters;
   }
 

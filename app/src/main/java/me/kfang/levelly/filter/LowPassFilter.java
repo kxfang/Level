@@ -1,28 +1,23 @@
 package me.kfang.levelly.filter;
 
+import java.util.Arrays;
+
 /**
- * A low pass filter that conditionally applies given a threshold.
+ * A generic low pass filter.
  */
 public class LowPassFilter implements FloatFilter {
   private float[] mPrevious;
   private final float ALPHA;
-  private final float THRESHOLD;
 
-  public LowPassFilter(float alpha, float threshold) {
+  public LowPassFilter(float alpha) {
     ALPHA = alpha;
-    THRESHOLD = threshold;
     mPrevious = null;
   }
 
   @Override
   public float[] next(float[] next) {
-    if (Math.abs(next[0]) > THRESHOLD && Math.abs(next[1]) > THRESHOLD) {
-      mPrevious = null;
-      return next;
-    }
     if (mPrevious == null) {
-      mPrevious = new float[next.length];
-      mPrevious = next;
+      mPrevious = Arrays.copyOf(next, next.length);
       return next;
     }
     for (int i = 0; i < next.length; i++) {
