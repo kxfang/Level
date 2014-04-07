@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +21,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import me.kfang.levelly.color.ColorSet;
+import me.kfang.levelly.util.AppRater;
+import me.kfang.levelly.util.LaunchCounter;
 
 public class MainActivity extends Activity {
 
@@ -141,6 +145,9 @@ public class MainActivity extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+    AppRater.getInstance().notifyLaunch(prefs);
 
     SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
     if (sensorManager.getSensorList(Sensor.TYPE_GRAVITY).isEmpty()) {
