@@ -1,4 +1,4 @@
-package me.kfang.levelly.debug;
+package me.kfang.levelly.app;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -6,8 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import me.kfang.levelly.app.R;
 
 /**
  * A fragment that displays the raw sensor values on screen.
