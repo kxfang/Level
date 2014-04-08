@@ -18,4 +18,5 @@
     <string name="pref_show_incline_summ">在水平模式下仍然显示平面度。</string>
     <string name="sensor_unsupported">对不起，您的手机缺乏测量水平的仪器。</string>
     <string name="label_inclination">平面度：%s</string>
+    <string name="action_rate_app">为此应用评分</string>
 </resources>
