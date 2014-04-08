@@ -36,7 +36,10 @@ public class CalibrationFilter implements FloatFilter {
     mRotationAxis = new Matrix(rotationCoordinates, 3);
     normalize(mRotationAxis);
 
-    double rotationTheta = -1 * Math.toRadians(OrientationManager.getDeviceTilt(flatOffsets[2]));
+    double rotationTheta = -1 * Math.toRadians(OrientationManager.getDeviceTilt(
+        flatOffsets[0],
+        flatOffsets[1],
+        flatOffsets[2]));
     double cosTheta = Math.cos(rotationTheta);
     double nCosTheta = 1 - cosTheta;
     double sinTheta = Math.sin(rotationTheta);

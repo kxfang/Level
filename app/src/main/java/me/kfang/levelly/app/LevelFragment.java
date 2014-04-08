@@ -57,10 +57,10 @@ public class LevelFragment extends Fragment {
     public void onSensorChanged(SensorEvent sensorEvent, float[] filteredValues) {
       mSensorValues = sensorEvent.values;
       OrientationManager.getInstance().setCurrentPosition(
-          OrientationManager.getDeviceTilt(mSensorValues[2]),
+          OrientationManager.getDeviceTilt(mSensorValues[0], mSensorValues[1], mSensorValues[2]),
           OrientationManager.getRotationDegrees(mSensorValues[0], mSensorValues[1]));
       setPosition(
-          OrientationManager.getDeviceTilt(filteredValues[2]),
+          OrientationManager.getDeviceTilt(filteredValues[0], filteredValues[1], filteredValues[2]),
           OrientationManager.getRotationDegrees(filteredValues[0], filteredValues[1]));
     }
 

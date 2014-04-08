@@ -96,10 +96,10 @@ public final class OrientationManager {
     return rotation;
   }
 
-  public static float getDeviceTilt(float z) {
-    float tilt = (float) Math.toDegrees(Math.acos(z / SensorManager.GRAVITY_EARTH));
+  public static float getDeviceTilt(float x, float y, float z) {
+    float tilt = (float) Math.toDegrees(Math.acos(z / Math.sqrt(x * x + y * y + z * z)));
     if (Float.isNaN(tilt)) {
-      return 0;
+      return z < 0 ? 180 : 0;
     }
     return tilt;
   }

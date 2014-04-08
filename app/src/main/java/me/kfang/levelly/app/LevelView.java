@@ -276,7 +276,7 @@ public abstract class LevelView extends View {
   }
 
   protected boolean isLevel(float value) {
-    float threshold = mWasLevel ? 0.3f : 0.2f;
+    float threshold = mWasLevel ? 0.35f : 0.25f;
     mWasLevel = Math.abs(value) < threshold || Math.abs(value) > 180 - threshold;
     return mWasLevel;
   }
