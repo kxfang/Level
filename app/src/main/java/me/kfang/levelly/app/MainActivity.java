@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -91,6 +93,17 @@ public class MainActivity extends Activity {
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuInflater inflater = getMenuInflater();
     inflater.inflate(R.menu.menu, menu);
+    SubMenu subMenu = menu.findItem(R.id.submenu).getSubMenu();
+    if (!AppRater.getInstance().shouldShowRateApp(PreferenceManager.getDefaultSharedPreferences(this))) {
+      subMenu.removeItem(R.id.action_rate_app);
+    } else {
+      Intent rateAppIntent = AppRater.getInstance().getRateAppIntent(this);
+      if (getPackageManager() == null
+          || getPackageManager().queryIntentActivities(rateAppIntent, 0).size() <= 0)
+      {
+        subMenu.removeItem(R.id.action_rate_app);
+      }
+    }
     return super.onCreateOptionsMenu(menu);
   }
 
@@ -108,6 +121,13 @@ public class MainActivity extends Activity {
   public boolean onOptionsItemSelected(MenuItem item) {
     int id = item.getItemId();
 
+    if (id == R.id.action_rate_app) {
+      Intent rateAppIntent = AppRater.getInstance().getRateAppIntent(this);
+      if (getPackageManager() != null
+          && getPackageManager().queryIntentActivities(rateAppIntent, 0).size() > 0) {
+        startActivity(rateAppIntent);
+      }
+    }
     if (id == R.id.action_calibrate_reset) {
       resetCalibration();
     } else if (id == R.id.action_settings) {

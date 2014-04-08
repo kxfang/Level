@@ -3,6 +3,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       android:id="@+id/options_menu">
     <item
+        android:id="@+id/submenu"
         android:icon="@drawable/ic_action_overflow"
         android:showAsAction="always">
         <menu>
@@ -10,6 +11,11 @@
                 android:id="@+id/action_settings"
                 android:title="@string/settings"
                 android:icon="@drawable/ic_action_settings"
+                android:showAsAction="never" />
+            <item
+                android:id="@+id/action_rate_app"
+                android:title="@string/action_rate_app"
+                android:icon="@drawable/ic_action_important"
                 android:showAsAction="never" />
             <item
                 android:id="@+id/action_calibrate_horizon"
