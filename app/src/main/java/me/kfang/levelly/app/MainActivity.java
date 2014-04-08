@@ -157,7 +157,7 @@ public class MainActivity extends Activity {
     }
 
     setContentView(R.layout.activity_main);
-    getWindow().getDecorView().setBackgroundColor(ColorSet.globalColorSet(this).getSecondaryColor());
+    findViewById(R.id.main_layout).setBackgroundColor(ColorSet.globalColorSet(this).getSecondaryColor());
 
     mHandler = new Handler(Looper.getMainLooper());
 
