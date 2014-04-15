@@ -19,4 +19,6 @@
     <string name="sensor_unsupported">对不起，您的手机缺乏测量水平的仪器。</string>
     <string name="label_inclination">平面度：%s</string>
     <string name="action_rate_app">为此应用评分</string>
+    <string name="pref_show_axis_inclination">显示X,Y轴角度</string>
+    <string name="pref_show_axis_inclination_summ">在平面模式显示X,Y轴角度</string>
 </resources>

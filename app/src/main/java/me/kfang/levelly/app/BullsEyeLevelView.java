@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Surface;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
@@ -23,9 +24,12 @@ public class BullsEyeLevelView extends LevelView {
 
   private int mArcIndicatorTransformStartTilt = 14;
   private int mArcIndicatorTransformEndTilt = 25;
+  private float mAxisArcIndicatorTransformStartTilt = 17;
+  private float mAxisIndicatorTransformStartTilt = 17;
   private int mLineIndicatorTransformStartTilt = 26;
   private int mLineIndicatorTransformEndTilt = 35;
 
+  private float mArcIndicatorStubLength = dpToPx(17.5f);
 
   private Config mConfig;
   private boolean mShowTransition;
@@ -33,12 +37,16 @@ public class BullsEyeLevelView extends LevelView {
   private float mTilt = 1.0f;
   private float mRotation = 1.0f;
 
+  private float mXTilt;
+  private float mYTilt;
+
   private RectF mArcDimensions;
 
   // Paint objects to optimize onDraw
   private Paint mTextPaint;
   private Paint mCirclePaint;
   private Paint mArcPaint;
+  private Paint mAxisIndicatorPaint;
 
   private TimeInterpolator mBackgroundInterpolator;
   private TimeInterpolator mRotationInterpolator;
@@ -72,6 +80,9 @@ public class BullsEyeLevelView extends LevelView {
 
     mArcPaint = new Paint(getIndicatorPaint());
     mArcPaint.setStyle(Paint.Style.STROKE);
+
+    mAxisIndicatorPaint = new Paint(getSubTextPaint());
+    mAxisIndicatorPaint.setTextAlign(Paint.Align.RIGHT);
 
     mBackgroundInterpolator = new TimeInterpolator(getBackgroundFadeDuration());
     mRotationInterpolator = new TimeInterpolator(getBackgroundFadeDuration());
@@ -118,6 +129,8 @@ public class BullsEyeLevelView extends LevelView {
   protected void onDataChange(DevicePosition position) {
     mTilt = position.getTilt();
     mRotation = position.getRotation();
+    mXTilt = position.getXTilt();
+    mYTilt = position.getYTilt();
   }
 
   @Override
@@ -212,32 +225,102 @@ public class BullsEyeLevelView extends LevelView {
   private void updatePaintColors() {
     mCirclePaint.setColor(getColorSet().getPrimaryColor());
     mArcPaint.setColor(getColorSet().getForegroundColor());
+    mAxisIndicatorPaint.setColor(getColorSet().getForegroundColor());
   }
 
   private void drawArcIndicators(Canvas c) {
-    float tiltStart = mArcIndicatorTransformStartTilt;
+    float tiltStart = getConfig().showAxisInclination() ?
+        mAxisArcIndicatorTransformStartTilt
+        : mArcIndicatorTransformStartTilt;
     float tiltEnd = mArcIndicatorTransformEndTilt;
+
+    float sweepAngle = getConfig().showAxisInclination() ? 180 : 90;
     c.drawArc(
         mArcDimensions,
         getTransformValue(mTilt, tiltStart, tiltEnd, 135, 180),
-        getTransformValue(mTilt, tiltStart, tiltEnd, 90, 0),
+        getTransformValue(mTilt, tiltStart, tiltEnd, sweepAngle, 0),
         false,
         mArcPaint);
 
     c.drawArc(
         mArcDimensions,
         getTransformValue(mTilt, tiltStart, tiltEnd, 315, 360),
-        getTransformValue(mTilt, tiltStart, tiltEnd, 90, 0),
+        getTransformValue(mTilt, tiltStart, tiltEnd, sweepAngle, 0),
         false,
         mArcPaint);
 
-    for (int i = -1; i <= 1; i+=2) {
+    if (!getConfig().showAxisInclination()) {
+      for (int i = -1; i <= 1; i += 2) {
+        c.drawLine(
+            getCenterX() + i * getTextBufferRadius(),
+            getCenterY(),
+            getCenterX()
+                + i * (getTextBufferRadius()
+                + getTransformValue(mTilt, tiltStart, tiltEnd, mArcIndicatorStubLength, 0)),
+            getCenterY(),
+            getIndicatorPaint()
+        );
+      }
+    } else if (mTilt <= mArcIndicatorTransformEndTilt) {
+      // Draw axis indicators
+      float subtextPadding = getResources().getDimensionPixelSize(R.dimen.subtext_padding);
+
+      // X axis
+      c.drawText(
+          getAxisText("x", mXTilt),
+          getCenterX() - getTextBufferRadius() - subtextPadding,
+          getCenterY() - subtextPadding,
+          mAxisIndicatorPaint);
+
+      float start;
+      float end;
+      float axisTiltMax;
+      float axisTransitionStart;
+
+      if (mXTilt < 0) {
+        start = getCenterX() + getTextBufferRadius();
+        end = getWidth() + dpToPx(50);
+        axisTiltMax = -mAxisArcIndicatorTransformStartTilt / 2;
+        axisTransitionStart = end;
+      } else {
+        start = getCenterX() - getTextBufferRadius();
+        end = -dpToPx(50);
+        axisTiltMax = mAxisArcIndicatorTransformStartTilt / 2;
+        axisTransitionStart = end;
+      }
+
       c.drawLine(
-          getCenterX() + i * getTextBufferRadius(),
+          getTransformValue(mTilt, mAxisIndicatorTransformStartTilt, mArcIndicatorTransformEndTilt, start, axisTransitionStart),
           getCenterY(),
-          getCenterX()
-              + i * (getTextBufferRadius() + getTransformValue(mTilt, tiltStart, tiltEnd, 35, 0)),
+          getTransformValue(mTilt, mAxisIndicatorTransformStartTilt, mArcIndicatorTransformEndTilt, getTransformValue(mXTilt, 0, axisTiltMax, start, end), axisTransitionStart),
           getCenterY(),
+          getIndicatorPaint()
+      );
+
+      // Y axis
+      c.drawText(
+          getAxisText("y", mYTilt),
+          getCenterX() - subtextPadding,
+          getCenterY() - getTextBufferRadius() - subtextPadding,
+          mAxisIndicatorPaint);
+
+      if (mYTilt > 0) {
+        start = getCenterY() + getTextBufferRadius();
+        end = getHeight() + dpToPx(50);
+        axisTiltMax = mAxisArcIndicatorTransformStartTilt;
+        axisTransitionStart = end;
+      } else {
+        start = getCenterY() - getTextBufferRadius();
+        end = -dpToPx(50);
+        axisTiltMax = -mAxisArcIndicatorTransformStartTilt;
+        axisTransitionStart = end;
+      }
+
+      c.drawLine(
+          getCenterX(),
+          getTransformValue(mTilt, mAxisIndicatorTransformStartTilt, mArcIndicatorTransformEndTilt, start, axisTransitionStart),
+          getCenterX(),
+          getTransformValue(mTilt, mAxisIndicatorTransformStartTilt, mArcIndicatorTransformEndTilt, getTransformValue(mYTilt, 0, axisTiltMax, start, end), axisTransitionStart),
           getIndicatorPaint()
       );
     }

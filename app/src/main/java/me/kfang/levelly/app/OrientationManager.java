@@ -96,12 +96,29 @@ public final class OrientationManager {
     return rotation;
   }
 
+  private static double getGravityMagnitude(float x, float y, float z) {
+    return Math.sqrt(x * x + y * y + z * z);
+  }
+
   public static float getDeviceTilt(float x, float y, float z) {
-    float tilt = (float) Math.toDegrees(Math.acos(z / Math.sqrt(x * x + y * y + z * z)));
+    float tilt = (float) Math.toDegrees(Math.acos(z / getGravityMagnitude(x, y, z)));
     if (Float.isNaN(tilt)) {
       return z < 0 ? 180 : 0;
     }
     return tilt;
+  }
+
+  public static float getXTilt(float x, float y, float z) {
+    double projectionLength = Math.sqrt(y * y + z * z);
+    float angle = (float) Math.toDegrees(Math.acos(projectionLength / getGravityMagnitude(x, y, z)));
+    if (x < 0) {
+      angle *= -1;
+    }
+    return angle;
+  }
+
+  public static float getYTilt(float x, float y, float z) {
+    return getXTilt(y, x, z);
   }
 
   public static boolean isLandscape(float rotation) {

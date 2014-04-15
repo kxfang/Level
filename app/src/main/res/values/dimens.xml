@@ -9,4 +9,6 @@
     <dimen name="circle_button_padding">3dp</dimen>
 
     <dimen name="text_size">16dp</dimen>
+
+    <dimen name="subtext_padding">8dp</dimen>
 </resources>

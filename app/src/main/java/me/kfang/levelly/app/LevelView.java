@@ -22,11 +22,11 @@ public abstract class LevelView extends View {
   private final float PIXEL_DENSITY = getResources().getDisplayMetrics().density;
 
   private final long BACKGROUND_FADE_DURATION;
-  private final float INDICATOR_TEXT_SIZE = 100 * PIXEL_DENSITY;
-  private final float INDICATOR_SHOW_DECIMAL_TEXT_SIZE = 70 * PIXEL_DENSITY;
-  private final float SUB_TEXT_SIZE = 20 * PIXEL_DENSITY;
+  private final float INDICATOR_TEXT_SIZE = dpToPx(100);
+  private final float INDICATOR_SHOW_DECIMAL_TEXT_SIZE = dpToPx(70);
+  private final float SUB_TEXT_SIZE = dpToPx(20);
   private final String SUB_TEXT_TYPEFACE = "sans-serif-light";
-  private final float INDICATOR_STROKE_WIDTH = 2.5f * PIXEL_DENSITY;
+  private final float INDICATOR_STROKE_WIDTH = dpToPx(2.5f);
   private final int NUM_HORIZON_INDICATORS = 3;
 
   private Paint mIndicatorPaint;
@@ -47,10 +47,12 @@ public abstract class LevelView extends View {
   public static class Config {
     private boolean mShowDecimal;
     private boolean mShowInclination;
+    private boolean mShowAxisInclination;
 
-    public Config(boolean showDecimal, boolean showInclination) {
+    public Config(boolean showDecimal, boolean showInclination, boolean showAxisInclination) {
       this.mShowDecimal = showDecimal;
       this.mShowInclination = showInclination;
+      this.mShowAxisInclination = showAxisInclination;
     }
 
     public boolean showDecimal() {
@@ -67,6 +69,10 @@ public abstract class LevelView extends View {
 
     public void setShowInclination(boolean mShowInclination) {
       this.mShowInclination = mShowInclination;
+    }
+
+    public boolean showAxisInclination() {
+      return mShowAxisInclination;
     }
   }
 
@@ -247,6 +253,14 @@ public abstract class LevelView extends View {
     return mConfig;
   }
 
+  protected String getAxisText(String axis, float value) {
+    if (Math.abs(value) >= 0.05) {
+      return String.format("%.1f°", value);
+    } else {
+      return String.format("0.0°");
+    }
+  }
+
   protected String getIndicatorText(float value) {
     if (mConfig.showDecimal()) {
       if (Math.abs(value) >= 0.05) {
@@ -279,5 +293,9 @@ public abstract class LevelView extends View {
     float threshold = mWasLevel ? 0.35f : 0.25f;
     mWasLevel = Math.abs(value) < threshold || Math.abs(value) > 180 - threshold;
     return mWasLevel;
+  }
+
+  protected float dpToPx(float dp) {
+    return dp * PIXEL_DENSITY;
   }
 }

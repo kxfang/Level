@@ -10,4 +10,9 @@
         android:title="@string/pref_show_incline"
         android:summary="@string/pref_show_incline_summ"
         android:defaultValue="false" />
+    <CheckBoxPreference
+        android:key="pref_show_axis_inclination"
+        android:title="@string/pref_show_axis_inclination"
+        android:summary="@string/pref_show_axis_inclination_summ"
+        android:defaultValue="false" />
 </PreferenceScreen>

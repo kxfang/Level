@@ -61,7 +61,9 @@ public class LevelFragment extends Fragment {
           OrientationManager.getRotationDegrees(mSensorValues[0], mSensorValues[1]));
       setPosition(
           OrientationManager.getDeviceTilt(filteredValues[0], filteredValues[1], filteredValues[2]),
-          OrientationManager.getRotationDegrees(filteredValues[0], filteredValues[1]));
+          OrientationManager.getRotationDegrees(filteredValues[0], filteredValues[1]),
+          OrientationManager.getXTilt(filteredValues[0], filteredValues[1], filteredValues[2]),
+          OrientationManager.getYTilt(filteredValues[0], filteredValues[1], filteredValues[2]));
     }
 
     @Override
@@ -70,7 +72,7 @@ public class LevelFragment extends Fragment {
     }
   }, new ArrayList<FloatFilter>());
 
-  private void setPosition(float deviceTilt, float rotation) {
+  private void setPosition(float deviceTilt, float rotation, float xTilt, float yTilt) {
     if (deviceTilt > 34.5f
         && deviceTilt < 144.5f) {
       setActiveLevelView(mHorizonLevelView);
@@ -88,15 +90,17 @@ public class LevelFragment extends Fragment {
       mLevelViewPosition.setRotation(rotation);
     }
     mLevelViewPosition.setTilt(deviceTilt);
+    mLevelViewPosition.setXTilt(xTilt);
+    mLevelViewPosition.setYTilt(yTilt);
     mActiveLevelView.setPosition(mLevelViewPosition);
   }
 
   private void setTilt(float deviceTilt) {
-    setPosition(deviceTilt, mLevelViewPosition.getRotation());
+    setPosition(deviceTilt, mLevelViewPosition.getRotation(), 0, 0);
   }
 
   private void setRotation(float rotation) {
-    setPosition(mLevelViewPosition.getTilt(), rotation);
+    setPosition(mLevelViewPosition.getTilt(), rotation, 0, 0);
   }
 
   private void setActiveLevelView(LevelView levelView) {
@@ -235,7 +239,8 @@ public class LevelFragment extends Fragment {
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
     mLevelViewConfig = new LevelView.Config(
         preferences.getBoolean(SettingsFragment.PREF_SHOW_DECIMAL, false),
-        preferences.getBoolean(SettingsFragment.PREF_SHOW_INCLINE, false));
+        preferences.getBoolean(SettingsFragment.PREF_SHOW_INCLINE, false),
+        preferences.getBoolean(SettingsFragment.PREF_SHOW_AXIS_INCLINATION, false));
 
     mBullsEyeLevelView.setConfig(mLevelViewConfig);
     mHorizonLevelView.setConfig(mLevelViewConfig);
