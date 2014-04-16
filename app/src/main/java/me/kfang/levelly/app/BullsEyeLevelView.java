@@ -280,15 +280,15 @@ public class BullsEyeLevelView extends LevelView {
       float axisTiltMax;
       float axisTransitionStart;
 
-      if (mXTilt < 0) {
+      if (mXTilt > 0) {
         start = getCenterX() + getTextBufferRadius();
         end = getWidth() + dpToPx(50);
-        axisTiltMax = -mAxisIndicatorMaxAngle;
+        axisTiltMax = mAxisIndicatorMaxAngle;
         axisTransitionStart = end;
       } else {
         start = getCenterX() - getTextBufferRadius();
         end = -dpToPx(50);
-        axisTiltMax = mAxisIndicatorMaxAngle;
+        axisTiltMax = -mAxisIndicatorMaxAngle;
         axisTransitionStart = end;
       }
 
@@ -307,15 +307,15 @@ public class BullsEyeLevelView extends LevelView {
           getCenterY() - getTextBufferRadius() - subtextPadding,
           mAxisIndicatorPaint);
 
-      if (mYTilt > 0) {
+      if (mYTilt < 0) {
         start = getCenterY() + getTextBufferRadius();
         end = getHeight() + dpToPx(50);
-        axisTiltMax = mAxisIndicatorMaxAngle;
+        axisTiltMax = -mAxisIndicatorMaxAngle;
         axisTransitionStart = end;
       } else {
         start = getCenterY() - getTextBufferRadius();
         end = -dpToPx(50);
-        axisTiltMax = -mAxisIndicatorMaxAngle;
+        axisTiltMax = mAxisIndicatorMaxAngle;
         axisTransitionStart = end;
       }
 

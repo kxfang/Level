@@ -111,7 +111,7 @@ public final class OrientationManager {
   public static float getXTilt(float x, float y, float z) {
     double projectionLength = Math.sqrt(y * y + z * z);
     float angle = (float) Math.toDegrees(Math.acos(projectionLength / getGravityMagnitude(x, y, z)));
-    if (x < 0) {
+    if (x > 0) {
       angle *= -1;
     }
     return angle;
