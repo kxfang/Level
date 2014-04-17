@@ -77,15 +77,14 @@ public class HorizonLevelView extends LevelView {
 
     canvas.save();
     canvas.rotate(mRotation, getCenterX(), getCenterY());
-    canvas.save();
-    canvas.translate(-10 * getWidth(), 0);
+
+    float maxDim = Math.max(getWidth(), getHeight());
     canvas.drawRect(
-        Float.MIN_VALUE,
+        -maxDim * 2,
         getHorizonHeight(mTilt),
-        Float.MAX_VALUE,
-        Float.MAX_VALUE,
+        maxDim * 2,
+        maxDim * 2,
         mHorizonPaint);
-    canvas.restore();
 
     String text = getIndicatorText(displayRotation);
     drawCenterText(canvas, text, getIndicatorPaint());
@@ -96,8 +95,6 @@ public class HorizonLevelView extends LevelView {
     }
 
     canvas.restore();
-
-
 
     drawHorizonIndicators(
         canvas,
