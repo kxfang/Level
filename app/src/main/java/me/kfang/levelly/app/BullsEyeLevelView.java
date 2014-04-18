@@ -269,11 +269,6 @@ public class BullsEyeLevelView extends LevelView {
       float subtextPadding = getResources().getDimensionPixelSize(R.dimen.subtext_padding);
 
       // X axis
-      c.drawText(
-          getAxisText("x", mXTilt),
-          getCenterX() - getTextBufferRadius() - subtextPadding,
-          getCenterY() - subtextPadding,
-          mAxisIndicatorPaint);
 
       float start;
       float end;
@@ -301,11 +296,6 @@ public class BullsEyeLevelView extends LevelView {
       );
 
       // Y axis
-      c.drawText(
-          getAxisText("y", mYTilt),
-          getCenterX() - subtextPadding,
-          getCenterY() - getTextBufferRadius() - subtextPadding,
-          mAxisIndicatorPaint);
 
       if (mYTilt < 0) {
         start = getCenterY() + getTextBufferRadius();
@@ -326,6 +316,45 @@ public class BullsEyeLevelView extends LevelView {
           getTransformValue(mTilt, mAxisIndicatorTransformStartTilt, mArcIndicatorTransformEndTilt, getTransformValue(mYTilt, 0, axisTiltMax, start, end), axisTransitionStart),
           getIndicatorPaint()
       );
+
+      // Axis labels
+      c.save();
+
+      int orientation = OrientationManager.getInstance().getCurrentOrientation();
+      float topAngle;
+      float leftAngle;
+
+      if (orientation == Surface.ROTATION_180 || orientation == Surface.ROTATION_0) {
+        if (orientation == Surface.ROTATION_180) {
+          c.rotate(180, getCenterX(), getCenterY());
+        }
+
+        topAngle = mYTilt;
+        leftAngle = mXTilt;
+      } else {
+        if (orientation == Surface.ROTATION_270) {
+          c.rotate(270, getCenterX(), getCenterY());
+        } else {
+          c.rotate(90, getCenterX(), getCenterY());
+        }
+
+        topAngle = mXTilt;
+        leftAngle = mYTilt;
+      }
+
+      c.drawText(
+          getAxisText(topAngle),
+          getCenterX() - subtextPadding,
+          getCenterY() - getTextBufferRadius() - subtextPadding,
+          mAxisIndicatorPaint);
+
+      c.drawText(
+          getAxisText(leftAngle),
+          getCenterX() - getTextBufferRadius() - subtextPadding,
+          getCenterY() - subtextPadding,
+          mAxisIndicatorPaint);
+
+      c.restore();
     }
   }
 

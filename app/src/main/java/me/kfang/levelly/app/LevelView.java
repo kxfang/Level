@@ -253,7 +253,7 @@ public abstract class LevelView extends View {
     return mConfig;
   }
 
-  protected String getAxisText(String axis, float value) {
+  protected String getAxisText(float value) {
     if (Math.abs(value) >= 0.05) {
       return String.format("%.1f°", value);
     } else {
