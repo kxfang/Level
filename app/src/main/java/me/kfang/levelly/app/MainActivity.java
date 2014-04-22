@@ -159,6 +159,8 @@ public class MainActivity extends Activity {
   @Override
   public boolean onMenuOpened(int featureId, Menu menu) {
     disableUiAutoHide();
+    ToastManager.getInstance().hideToast(mCalibrationToastId);
+    mCalibrating = false;
     return super.onMenuOpened(featureId, menu);
   }
 
