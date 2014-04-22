@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Level.ly</string>
+    <string name="app_name">Levelly</string>
     <string name="hello_world">Hello world!</string>
     <string name="calibrate_surface"><b>Calibrate inclination</b>\nPlace your device face-up on a flat horizontal surface and press Done</string>
     <string name="calibrate_horizon"><b>Calibrate horizon</b>\nPlace one of the edges of your device parallel against a flat horizontal surface and press Done</string>

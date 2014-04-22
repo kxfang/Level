@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Niveau</string>
+    <string name="app_name">Levelly</string>
     <string name="calibrate_surface"><b>Etalonner l\'inclinaison</b>\nPosez l\'appareil avec la face vers la haut et parallèle au sol et appuyez sur le bouton Etalonner.</string>
     <string name="calibrate_horizon"><b>Etalonner l\'horizon</b>\nPosez l\'appareil verticalement avec un côté parallèle au sol et appuyez sur le bouton Etalonner.</string>
     <string name="calibrate_button">Etalonner</string>
