@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Niveau</string>
+    <string name="calibrate_surface"><b>Etalonner l\'inclination</b>\nPosez l\'appareil avec la face vers la haut et parallèle au sol et appuyez sur le bouton Etalonner.</string>
+    <string name="calibrate_horizon"><b>Etalonner l\'horizon</b>\nPosez l\'appareil verticalement avec un côté parallèle au sol et appuyez sur le bouton Etalonner.</string>
+    <string name="calibrate_button">Etalonner</string>
+    <string name="calibrate_confirm"><b>L\'étalonnage est enregistré!</b>\nOn peut réinitialiser l\'étalonnage dans le menu</string>
+    <string name="calibrate_restore"><b>L\'étalonnage est réinitialisé!</b></string>
+    <string name="reset_confirmation_title">Etes-vous sûr que vous voulez réinitialiser l\'étalonnage?</string>
+    <string name="reset_confirmation_message">L\'étalonnage sera réinitialisé.</string>
+    <string name="action_calibrate_horizon">Etalonner l\'horizon</string>
+    <string name="action_calibrate_bullseye">Etalonner l\'inclination</string>
+    <string name="action_calibrate_reset">Réinitialiser l\'étalonnage</string>
+    <string name="settings">Préférences</string>
+    <string name="pref_show_decimal">Montrer décimale</string>
+    <string name="pref_show_decimal_summ">Montrer une décimale pour tous les nombres.</string>
+    <string name="pref_show_incline">Montrer l\'inclination</string>
+    <string name="pref_show_incline_summ">Montrer l\'inclination toujours.</string>
+    <string name="sensor_unsupported">Désolé, votre appareil ne possède pas les capteurs nécessaires.</string>
+    <string name="label_inclination">L\'inclination：%s</string>
+    <string name="action_rate_app">Évaluer cette application</string>
+    <string name="pref_show_axis_inclination">Montrer les axes</string>
+    <string name="pref_show_axis_inclination_summ">Montrer les angles des axes X et Y.</string>
+</resources>
