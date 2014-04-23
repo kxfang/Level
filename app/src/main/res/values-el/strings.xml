@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Levelly</string>
+    <string name="hello_world">Γειά σου κόσμε!</string>
+    <string name="calibrate_surface"><b>Βαθμονόμηση κλίσης</b>\nΤοποθετήστε τη συσκευή με την πρόσοψη προς τα πάνω σε μια επίπεδη, οριζόντια επιφάνεια και πατήστε Εντάξει</string>
+    <string name="calibrate_horizon"><b>Βαθμονόμηση ορίζοντα</b>\nΤοποθετήστε μια από τις παράλληλες πλευρές της συσκευής σε μια επίπεδη, οριζόντια επιφάνεια και πατήστε Εντάξει</string>
+    <string name="calibrate_button">Εντάξει</string>
+    <string name="calibrate_confirm"><b>Η βαθμονόμηση αποθηκεύτηκε!</b>\nΜπορείτε να επαναφέρετε την αρχική βαθμονόμηση από το μενού.</string>
+    <string name="calibrate_restore"><b>Η αρχική βαθμονόμηση αποκαταστάθηκε!</b></string>
+    <string name="reset_confirmation_title">Επαναφορά των βαθμονομήσεων;</string>
+    <string name="reset_confirmation_message">Θα αποκατασταθούν οι αρχικές βαθμονομήσεις.</string>
+    <string name="action_calibrate_horizon">Βαθμονόμηση ορίζοντα</string>
+    <string name="action_calibrate_bullseye">Βαθμονόμηση κλίσης</string>
+    <string name="action_calibrate_reset">Επαναφορά βαθμονόμησης</string>
+    <string name="settings">Ρυθμίσεις</string>
+    <string name="pref_show_decimal">Εμφάνιση δεκαδικών υποδιαιρέσεων</string>
+    <string name="pref_show_decimal_summ">Εμφάνιση ενός δεκαδικού ψηφίου σε όλους τους αριθμούς.</string>
+    <string name="pref_show_incline">Πάντα εμφάνιση της κλίσης</string>
+    <string name="pref_show_incline_summ">Εμφάνιση της κλίσης της συσκευής όταν βρίσκεται σε προβολή ορίζοντα.</string>
+    <string name="sensor_unsupported">Λυπούμαστε, αλλά η συσκευή δεν έχει τους απαραίτητους αισθητήρες.</string>
+    <string name="label_inclination">Κλίση: %s</string>
+    <string name="action_rate_app">Βαθμολόγηση της εφαρμογής</string>
+    <string name="pref_show_axis_inclination">Εμφάνιση της κλίσης των αξόνων x-y</string>
+    <string name="pref_show_axis_inclination_summ">Εμφάνιση της γωνίας κλίσης των αξόνων x-y</string>
+</resources>
