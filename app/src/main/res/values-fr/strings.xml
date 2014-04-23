@@ -17,7 +17,7 @@
     <string name="pref_show_incline">Montrer l\'inclinaison</string>
     <string name="pref_show_incline_summ">Montrer l\'inclinaison toujours.</string>
     <string name="sensor_unsupported">Désolé, votre appareil ne possède pas les capteurs nécessaires.</string>
-    <string name="label_inclination">L\'inclinaison：%s</string>
+    <string name="label_inclination">Inclinaison：%s</string>
     <string name="action_rate_app">Noter cette application</string>
     <string name="pref_show_axis_inclination">Montrer les axes</string>
     <string name="pref_show_axis_inclination_summ">Montrer les angles des axes X et Y.</string>
