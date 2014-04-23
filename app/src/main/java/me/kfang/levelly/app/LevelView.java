@@ -257,7 +257,7 @@ public abstract class LevelView extends View {
     if (Math.abs(value) >= 0.05) {
       return String.format("%.1f°", value);
     } else {
-      return String.format("0.0°");
+      return String.format("%.1f°", 0f);
     }
   }
 
@@ -266,7 +266,7 @@ public abstract class LevelView extends View {
       if (Math.abs(value) >= 0.05) {
         return String.format("%.1f°", value);
       } else {
-        return "0.0°";
+        return String.format("%.1f°", 0f);
       }
     } else {
       int roundedValue;
