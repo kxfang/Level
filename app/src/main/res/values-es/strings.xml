@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Levelly</string>
+    <string name="calibrate_surface"><b>Calibrar la inclinación</b>\nOrienta el aparato cara arriba y paralelo al suelo y pulse el botón Calibrar.</string>
+    <string name="calibrate_horizon"><b>Calibrar el horizonte</b>\nOrienta el aparato en posición vertical, con un lado paralelo al suelo y pulse el botón Calibrar.</string>
+    <string name="calibrate_button">Calibrar</string>
+    <string name="calibrate_confirm"><b>La calibración es guardado!</b>\nPuede reinicializar la calibración en el menú.</string>
+    <string name="calibrate_restore"><b>La calibración es reinicializado!</b></string>
+    <string name="reset_confirmation_title">¿Confirma que desea reinicializar la calibración?</string>
+    <string name="reset_confirmation_message">La calibración será reinicializado.</string>
+    <string name="action_calibrate_horizon">Calibrar el horizonte</string>
+    <string name="action_calibrate_bullseye">Calibrar la inclinación</string>
+    <string name="action_calibrate_reset">Reinicializar la calibración</string>
+    <string name="settings">Preferencias</string>
+    <string name="pref_show_decimal">Mostrar decimal</string>
+    <string name="pref_show_decimal_summ">Mostrar un decimal para todos los números.</string>
+    <string name="pref_show_incline">Mostrar la inclinación</string>
+    <string name="pref_show_incline_summ">Mostrar la inclinación siempre.</string>
+    <string name="sensor_unsupported">Lo siento, su aparato no dispone de los sensores necesarios.</string>
+    <string name="label_inclination">La inclinación：%s</string>
+    <string name="action_rate_app">Valorar esta aplicación</string>
+    <string name="pref_show_axis_inclination">Mostrar los ejes</string>
+    <string name="pref_show_axis_inclination_summ">Mostrar los ejes X e Y.</string>
+</resources>
