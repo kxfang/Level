@@ -11,7 +11,7 @@
 
     <style name="ActionBarStyle"
            parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/action_bar_bg</item>
+        <item name="android:background">@drawable/ab_gradient</item>
     </style>
 
     <style name="PopupStyle"
