@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Levelly</string>
+    <string name="hello_world">Olá mundo!</string>
+    <string name="calibrate_surface"><b>Calibrar inclinação</b>\nPosicione o dispositivo virado para cima em uma superfície horizontal plana e pressione Feito</string>
+    <string name="calibrate_horizon"><b>Calibrar horizonte</b>\nPosicione uma das laterais do dispositivo em uma superfície horizontal plana e pressione Feito</string>
+    <string name="calibrate_button">Feito</string>
+    <string name="calibrate_confirm"><b>Calibragem salva!</b>\nVocê pode restaurar os padrões de calibragem pelo menu.</string>
+    <string name="calibrate_restore"><b>Calibragem padrão restaurada!</b></string>
+    <string name="reset_confirmation_title">Zerar sua calibragem?</string>
+    <string name="reset_confirmation_message">A calibragem padrão será restaurada.</string>
+    <string name="action_calibrate_horizon">Calibrar horizonte</string>
+    <string name="action_calibrate_bullseye">Calibrar inclinação</string>
+    <string name="action_calibrate_reset">Zerar calibragem</string>
+    <string name="settings">Configurações</string>
+    <string name="pref_show_decimal">Mostrar decimal</string>
+    <string name="pref_show_decimal_summ">Mostra uma casa decimal para todos os números.</string>
+    <string name="pref_show_incline">Sempre mostrar inclinação</string>
+    <string name="pref_show_incline_summ">Mostra a inclinação do dispositivo quando em modo horizonte.</string>
+    <string name="sensor_unsupported">Desculpe, seu dispositivo não possui os sensores necessários.</string>
+    <string name="label_inclination">Inclinação: %s</string>
+    <string name="action_rate_app">Avalie este app</string>
+    <string name="pref_show_axis_inclination">Mostrar inclinação do eixo x-y</string>
+    <string name="pref_show_axis_inclination_summ">Mostra os ângulos de inclinação para os eixos x e y.</string>
+</resources>
