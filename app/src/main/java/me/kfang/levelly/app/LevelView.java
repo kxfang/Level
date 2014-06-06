@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -89,6 +90,11 @@ public abstract class LevelView extends View {
       indicatorTypeface = typedArray.getString(R.styleable.LevelView_typeface);
     } finally {
       typedArray.recycle();
+    }
+
+    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN
+        && indicatorTypeface.equals("sans-serif-thin")) {
+      indicatorTypeface = "sans-serif-light";
     }
 
     mIndicatorPaint = new Paint();
