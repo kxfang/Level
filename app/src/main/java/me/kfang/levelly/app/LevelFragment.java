@@ -41,7 +41,7 @@ public class LevelFragment extends Fragment {
 
   private DevicePosition mLevelViewPosition;
 
-  private float[] mSensorValues;
+  private float[] mSensorValues = new float[3];
   private float mRotationCalibrationOffset;
 
   private LevelView.Config mLevelViewConfig;
@@ -55,7 +55,9 @@ public class LevelFragment extends Fragment {
   private SensorFilter mSensorEventListener = new SensorFilter(new SensorFilter.Listener() {
     @Override
     public void onSensorChanged(SensorEvent sensorEvent, float[] filteredValues) {
-      mSensorValues = sensorEvent.values;
+      for (int i = 0; i < mSensorValues.length; i++) {
+        mSensorValues[i] = sensorEvent.values[i];
+      }
       OrientationManager.getInstance().setCurrentPosition(
           OrientationManager.getDeviceTilt(mSensorValues[0], mSensorValues[1], mSensorValues[2]),
           OrientationManager.getRotationDegrees(mSensorValues[0], mSensorValues[1]));
