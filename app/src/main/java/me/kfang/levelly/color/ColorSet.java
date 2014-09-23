@@ -21,8 +21,14 @@ public class ColorSet {
   private static final String PURPLE = "purple";
   private static final String RED = "red";
   private static final String GREEN = "green";
+  private static final String INDIGO = "indigo";
+  private static final String PINK = "pink";
+  private static final String TEAL = "teal";
+  private static final String GREY = "grey";
+  private static final String CYAN = "cyan";
 
-  private static final List<String> RANDOM_SET = Arrays.asList(BLUE, ORANGE, PURPLE, RED);
+  private static final List<String> RANDOM_SET = Arrays.asList(
+      BLUE, ORANGE, PURPLE, RED, INDIGO, PINK, TEAL, GREY, CYAN);
 
   private static ColorSet sGlobalColorSet = null;
 
@@ -46,6 +52,16 @@ public class ColorSet {
       resId = R.array.purple;
     } else if (color.equals(RED)) {
       resId = R.array.red;
+    } else if (color.equals(INDIGO)) {
+      resId = R.array.indigo;
+    } else if (color.equals(PINK)) {
+      resId = R.array.pink;
+    } else if (color.equals(TEAL)) {
+      resId = R.array.teal;
+    } else if (color.equals(GREY)) {
+      resId = R.array.grey;
+    } else if (color.equals(CYAN)) {
+      resId = R.array.cyan;
     } else {
       throw new IllegalArgumentException(color + " is an invalid color");
     }
